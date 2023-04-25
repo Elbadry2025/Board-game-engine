@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chess</title>
+    <link rel="stylesheet" href="sudoku.css" type="text/css">
+</head>
+<body>
+<div id="container" class="board"></div>
+<input class="input" type="text" id="nameInput">
+<button class="input"  onclick="myEngine.takeInputAndMoveToControllerAndDraw()">Submit</button>
+<script>
+    const chars = ['a','b','c','d','e','f','g','h','i','h','k','l'];
+    let container = document.getElementById('container');
+    for (let i = 0; i < 9*9; i++) {
+        let element = document.createElement('div');
+        if(i%2==0) element.className = "white"
+        else element.className = "black"
+        element.id = chars[i%9]+(Math.trunc(i/9)+1);
+        container.appendChild(element);
+    };
+</script>
+<script src="../AbstractEngine/Engine.js"> </script>
+<script src="../AbstractEngine/Drawer.js"> </script>
+<script src="../AbstractEngine/Controller.js"> </script>
+<script src="sudoku.js"> </script>
+
+</body>
+</html>
