@@ -1,91 +1,10 @@
-function joseph()
-{
-    console.log("jos fhnn n heph");
-}
-
-let print = (toPrint) => {
-    console.log(toPrint);
-}
-let printLn = (toPrint) => {console.log(toPrint + "\n")}
-
-
-class Controller
-{
-    numOfPlayers;
-    currentplayer = 1;
-
-    gameFlow()
-    {
-        print("player " + this.currentplayer + " turn");
-
-    }
-
-    validate()
-    {
-
-    }
-}
-
-var c = new Controller();
-
-class ChessController extends Controller
-{
-    validate()
-    {
-    }
-}
-
-class Drawer
-{
-    board;
-    constructor(board)
-    {
-        this.board = board;
-    }
-
-    printBoard()
-    {
-        var dimx = this.board.length;
-        var dimy = this.board[0].length;
-        for (var i = dimx - 1; i >= 0; i--)
-        {
-            print(i + 1 + " ");
-            for (var j = 0; j < dimy; j++)
-            {
-                var printedAsci = this.board[i][j].getAsci();
-                printMessege(printedAsci);
-            }
-            print('\n')
-        }
-        print("_ ");
-        for (var i = 0; i < dimx; i++)
-            print(" " + (i + 1) + " ");
-        println();
-    }
-
-}
-
-class Engine
-{
-    dimx;
-    dimy;
-    board;
-    drawer;
-    controller;
-    constructor(dimx, dimy)
-    {
-        this.dimx = dimx;
-        this.dimy = dimy;
-        this.board = new Array(dimx);
-        for (var i = 0; i < dimx; i++)
-            this.board[i] = new Array(dimy);
-        this.drawer = new Drawer(this.board);
-    }
-}
-
 class Piece
 {
     constructor()
+    {
+    }
+
+    getAsci()
     {
     }
 }
@@ -107,24 +26,14 @@ class Point
     }
 }
 
-class ChessEngine extends Engine
+class ChessMove
 {
-    constructor()
+    point1;
+    point2;
+    constructor(point1, point2)
     {
-        super(8, 8);
-    }
-}
-
-class chessDrawer
-{
-    board;
-
-    draw()
-    {
-        // nested loop on board to get pieces
-        // var i = 5;
-        // var j = 7;
-        // this.board[i][j].getAsci();
+        this.point1 = point1;
+        this.point2 = point2;
     }
 }
 
@@ -132,11 +41,6 @@ const ChessColors = Object.freeze({
     white : 0,
     black : 1,
     none : 2
-});
-
-const ChessTurn = Object.freeze({
-    white : 0,
-    black : 1
 });
 
 class ChessPiece extends Piece
@@ -162,6 +66,26 @@ class ChessPiece extends Piece
     }
     getAsci()
     {
+        return " ";
+    }
+}
+
+class EmptyChessPiece extends ChessPiece
+{
+    constructor()
+    {
+        super();
+        this.color = ChessColors.none;
+    }
+    getvalidMoves(board, point)
+    {
+        return [];
+    }
+
+    isValidMove(board, point, newpoint)
+    {
+        console.log("valid for empty");
+        return false;
     }
 }
 
@@ -171,12 +95,20 @@ class King extends ChessPiece
     {
         super(color);
     }
+
     getValidMoves(board, point)
     {
         var list = [];
         var pieceMoves = new PieceMoves(board, point, this.color, list);
         pieceMoves.addKingMoves();
         return list;
+    }
+
+    getAsci()
+    {
+        if (this.color == ChessColors.white)
+            return '♔';
+        else return '♚';
     }
 }
 
@@ -186,6 +118,7 @@ class Queen extends ChessPiece
     {
         super(color);
     }
+
     getValidMoves(board, point)
     {
         var list = [];
@@ -194,6 +127,13 @@ class Queen extends ChessPiece
         pieceMoves.addMovesDiagonal();
 
         return list;
+    }
+
+    getAsci()
+    {
+        if (this.color == ChessColors.white)
+            return '♕';
+        else return '♛';
     }
 }
 
@@ -203,6 +143,7 @@ class Rook extends ChessPiece
     {
         super(color);
     }
+
     getValidMoves(board, point)
     {
         var list = [];
@@ -211,12 +152,12 @@ class Rook extends ChessPiece
 
         return list;
     }
+
     getAsci()
     {
         if (this.color == ChessColors.white)
             return '♖';
-        else
-            return '♜';
+        else return '♜';
     }
 }
 
@@ -226,6 +167,7 @@ class Bishop extends ChessPiece
     {
         super(color);
     }
+
     getValidMoves(board, point)
     {
         var list = [];
@@ -233,6 +175,13 @@ class Bishop extends ChessPiece
         pieceMoves.addMovesDiagonal();
 
         return list;
+    }
+
+    getAsci()
+    {
+        if (this.color == ChessColors.white)
+            return "♗";
+        else return "♝";
     }
 }
 
@@ -242,6 +191,7 @@ class Knight extends ChessPiece
     {
         super(color);
     }
+
     getValidMoves(board, point)
     {
         var list = [];
@@ -249,6 +199,13 @@ class Knight extends ChessPiece
         pieceMoves.addKingMoves();
 
         return list;
+    }
+
+    getAsci()
+    {
+        if (this.color == ChessColors.white)
+            return "♘";
+        else return "♞";
     }
 }
 
@@ -261,20 +218,19 @@ class Pawn extends ChessPiece
 
     getValidMoves(board, point)
     {
+        console.log("getvalidmoves");
         var list = [];
         var pieceMoves = new PieceMoves(board, point, this.color, list);
         pieceMoves.addPawnMoves();
 
         return list;
     }
-}
 
-
-class emptyChessPiece extends Piece
-{
-    constructor()
+    getAsci()
     {
-        super();
+        if (this.color == ChessColors.white)
+            return "♙";
+        else return "♟";
     }
 }
 
@@ -354,38 +310,260 @@ class PieceMoves
 
         if (this.color == ChessColors.white)
         {
-            if (checkValidPoint(new point(x + 1, y - 1)) && this.board[x + 1][y - 1].color != this.color)
-                list.add(new Point(x + 1, y - 1));
+            if (this.checkValidPoint(new Point(x + 1, y - 1)) && this.board[x + 1][y - 1].color != this.color)
+                this.list.push(new Point(x + 1, y - 1));
 
-            if (this.checkValidPoint(new point(x+1, y + 1)) && chess[x + 1][y + 1].color != this.color)
-                list.add(new Point(x + 1, y + 1));
+            if (this.checkValidPoint(new Point(x+1, y + 1)) && this.board[x + 1][y + 1].color != this.color)
+                this.list.push(new Point(x + 1, y + 1));
 
             if (this.board[x + 1][y].color == ChessColors.none)
-                list.add(new Point(x + 1, y));
+                this.list.push(new Point(x + 1, y));
 
             if (x == 1 && this.board[x + 2][y].color == ChessColors.none && this.board[x + 1][y].color == ChessColors.none)
-                list.add(new Point(x + 2, y));
+                this.list.push(new Point(x + 2, y));
         }
         else
         {
 
-            if (this.checkValidPoint(new point(x - 1, y - 1)) && chess[x - 1][y - 1].color != this.color)
-                list.add(new Point(x - 1, y - 1));
+            if (this.checkValidPoint(new Point(x - 1, y - 1)) && this.board[x - 1][y - 1].color != this.color)
+                this.list.push(new Point(x - 1, y - 1));
 
-            if (this.checkValidPoint(new point(x - 1, y + 1)) && chess[x - 1][y - 1].color != this.color)
-                list.add(new Point(x - 1, y + 1));
+            if (this.checkValidPoint(new Point(x - 1, y + 1)) && this.board[x - 1][y - 1].color != this.color)
+                this.list.push(new Point(x - 1, y + 1));
 
             if (this.board[x - 1][y].color == ChessColors.none)
-                list.add(new Point(x - 1, y));
+                this.list.push(new Point(x - 1, y));
             if (x == 6 && this.board[x - 2][y].color == ChessColors.none && this.board[x - 1][y].color == ChessColors.none)
-                list.add(new Point(x - 2, y));
+                this.list.push(new Point(x - 2, y));
         }
-        return list;
     }
 
     checkValidPoint(point)
     {
-        if (min(point.x, point.y) < 0 || max(point.x, point.y) >= 8) return false;
+        if (Math.min(point.x, point.y) < 0 || Math.max(point.x, point.y) >= 8) return false;
         return true;
     }
+
 }
+
+class Engine
+{
+    numOfPlayers;
+    dimx;
+    dimy;
+    board;
+    drawer;
+    controller;
+
+    constructor(numOfPlayers, dimx, dimy)
+    {
+        this.dimx = dimx;
+        this.dimy = dimy;
+        this.numOfPlayers = numOfPlayers;
+        this.initializeBoardDimentions();
+        this.initializeBoardPieces();
+    }
+
+    initializeBoardDimentions()
+    {
+        this.board = new Array(this.dimx);
+        for (var i = 0; i < this.dimx; i++)
+            this.board[i] = new Array(this.dimy);
+    }
+
+    initializeBoardPieces()
+    {
+    }
+
+    takeInputAndMoveToControllerAndDraw()
+    {
+        let moveString = document.getElementById("nameInput").value;
+        this.controller.convertAndValidateInputAndMakeMove(moveString);
+        this.drawer.draw();
+        this.controller.printPlayerTurnMessage();
+    }
+}
+
+class Controller
+{
+    numOfPlayers;
+    currentplayer = 1;
+    board;
+
+    constructor(numOfPlayers, board)
+    {
+        this.numOfPlayers = numOfPlayers;
+        this.board = board;
+        this.printPlayerTurnMessage();
+    }
+
+    convertAndValidateInputAndMakeMove(moveString)
+    {
+        var move = this.convertInputToMove(moveString);
+
+        if (this.validateMove(move))
+        {
+            this.currentplayer = (this.currentplayer + 1) % this.numOfPlayers;
+            this.makeBoardChangeAfterMove(move)
+        }
+        else
+        {
+            console.log("Invalid Move");
+        }
+    }
+
+    convertInputToMove(s)
+    {
+    }
+
+    validateMove(moveString)
+    {
+    }
+
+    printPlayerTurnMessage()
+    {
+        console.log("Player " + this.currentplayer + " turn");
+    }
+
+    makeBoardChangeAfterMove(move)
+    {
+    }
+}
+
+class Drawer
+{
+    board;
+    dimx;
+    dimy;
+    constructor(board)
+    {
+        console.log("drawer constructor");
+        console.log(board);
+        this.board = board;
+        this.dimy = this.board[0].length;
+        this.dimx = this.board.length;
+        this.draw();
+    }
+
+    draw()
+    {
+
+        for (let i = 0; i < this.dimy; i++) {
+            for (let j = 0; j < this.dimx; j++) {
+                let colName = String.fromCharCode('a'.charCodeAt(0) + j)
+                let rowNum = this.dimy - i
+                let temp = document.getElementById(colName + rowNum);
+                temp.textContent = ''
+                let node = document.createTextNode(this.board[this.dimy - i - 1][j].getAsci())
+                temp.appendChild(node);
+            }
+        }
+    }
+
+}
+
+class ChessEngine extends Engine
+{
+    constructor()
+    {
+        super(2, 8, 8);
+        this.controller = new ChessController(this.board);
+        this.drawer = new ChessDrawer(this.board);
+    }
+
+    initializeBoardPieces()
+    {
+        for (var i = 2; i < 6; i++)
+            for (var j = 0; j < 8; j++)
+                this.board[i][j] = new EmptyChessPiece();
+
+        this.board[0][0] = new Rook(ChessColors.white);
+        this.board[0][1] = new Knight(ChessColors.white);
+        this.board[0][2] = new Bishop(ChessColors.white);
+        this.board[0][3] = new Queen(ChessColors.white);
+        this.board[0][4] = new King(ChessColors.white);
+        this.board[0][5] = new Bishop(ChessColors.white);
+        this.board[0][6] = new Knight(ChessColors.white);
+        this.board[0][7] = new Rook(ChessColors.white);
+
+
+        this.board[7][0] = new Rook(ChessColors.black);
+        this.board[7][1] = new Knight(ChessColors.black);
+        this.board[7][2] = new Bishop(ChessColors.black);
+        this.board[7][3] = new Queen(ChessColors.black);
+        this.board[7][4] = new King(ChessColors.black);
+        this.board[7][5] = new Bishop(ChessColors.black);
+        this.board[7][6] = new Knight(ChessColors.black);
+        this.board[7][7] = new Rook(ChessColors.black);
+
+        for (var j = 0; j < 8; j++)
+            this.board[1][j] = new Pawn(ChessColors.white);
+        for (var j = 0; j < 8; j++)
+            this.board[6][j] = new Pawn(ChessColors.black);
+    }
+}
+
+class ChessController extends Controller
+{
+    constructor(board)
+    {
+        var numOfPlayers = 2;
+        super(numOfPlayers, board);
+    }
+
+    validateMove(move)
+    {
+        // console.log(moveString);
+        // var move = this.convertInputToMove(moveString);
+        var point1 = move.point1;
+        var point2 = move.point2;
+
+        if (Math.min(point1.x, point1.y) < 0 || Math.max(point1.x, point1.y) >= 8)
+            return false;
+        if (this.board[point1.x][point2.y].isValidMove(this.board, point1, point2))
+            return true;
+        else
+            return false;
+    }
+
+    convertInputToMove(moveString)
+    {
+        var list = moveString.split(" ");
+        var col1 = parseInt(list[0]);
+        var row1 = parseInt(list[1]);
+        var col2 = parseInt(list[2]);
+        var row2 = parseInt(list[3]);
+
+        row1--;
+        col1--;
+        row2--;
+        col2--;
+
+        var point1 = new Point(row1, col1);
+        var point2 = new Point(row2, col2);
+        console.log(this.board[row1][col1]);
+        return new ChessMove(point1, point2);
+    }
+
+    makeBoardChangeAfterMove(move)
+    {
+        var point1 = move.point1;
+        var point2 = move.point2;
+
+        this.board[point2.x][point2.y] = this.board[point1.x][point1.y];
+        this.board[point1.x][point1.y] = new EmptyChessPiece();
+
+        console.log(this.board);
+    }
+}
+
+class ChessDrawer extends Drawer
+{
+    constructor(board)
+    {
+        super(board);
+    }
+
+}
+
+var myEngine = new ChessEngine();
