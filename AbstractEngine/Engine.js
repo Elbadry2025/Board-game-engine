@@ -14,6 +14,7 @@ class Engine
         this.numOfPlayers = numOfPlayers;
         this.initializeBoardDimentions();
         this.initializeBoardPieces();
+        initializeHTML(dimx, dimy);
     }
 
     initializeBoardDimentions()

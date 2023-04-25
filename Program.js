@@ -453,8 +453,3 @@ class ChessDrawer extends Drawer
 }
 
 var myEngine = new ChessEngine();
-
-
-
-var en = new ChessEngine();
-console.log(en.numOfPlayers);

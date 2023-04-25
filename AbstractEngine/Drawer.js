@@ -20,6 +20,7 @@ class Drawer
                 let colName = String.fromCharCode('a'.charCodeAt(0) + j)
                 let rowNum = this.dimy - i
                 let temp = document.getElementById(colName + rowNum);
+                console.log(colName + rowNum)
                 temp.textContent = ''
                 let node = document.createTextNode(this.board[this.dimy - i - 1][j].getAsci())
                 temp.appendChild(node);
