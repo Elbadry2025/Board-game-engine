@@ -1,3 +1,5 @@
+// import {Engine} from './engine.js'
+
 class Piece
 {
     constructor()
@@ -346,122 +348,6 @@ class PieceMoves
 
 }
 
-class Engine
-{
-    numOfPlayers;
-    dimx;
-    dimy;
-    board;
-    drawer;
-    controller;
-
-    constructor(numOfPlayers, dimx, dimy)
-    {
-        this.dimx = dimx;
-        this.dimy = dimy;
-        this.numOfPlayers = numOfPlayers;
-        this.initializeBoardDimentions();
-        this.initializeBoardPieces();
-    }
-
-    initializeBoardDimentions()
-    {
-        this.board = new Array(this.dimx);
-        for (var i = 0; i < this.dimx; i++)
-            this.board[i] = new Array(this.dimy);
-    }
-
-    initializeBoardPieces()
-    {
-    }
-
-    takeInputAndMoveToControllerAndDraw()
-    {
-        let moveString = document.getElementById("nameInput").value;
-        this.controller.convertAndValidateInputAndMakeMove(moveString);
-        this.drawer.draw();
-        this.controller.printPlayerTurnMessage();
-    }
-}
-
-class Controller
-{
-    numOfPlayers;
-    currentplayer = 1;
-    board;
-
-    constructor(numOfPlayers, board)
-    {
-        this.numOfPlayers = numOfPlayers;
-        this.board = board;
-        this.printPlayerTurnMessage();
-    }
-
-    convertAndValidateInputAndMakeMove(moveString)
-    {
-        var move = this.convertInputToMove(moveString);
-
-        if (this.validateMove(move))
-        {
-            this.currentplayer = (this.currentplayer + 1) % this.numOfPlayers;
-            this.makeBoardChangeAfterMove(move)
-        }
-        else
-        {
-            console.log("Invalid Move");
-        }
-    }
-
-    convertInputToMove(s)
-    {
-    }
-
-    validateMove(moveString)
-    {
-    }
-
-    printPlayerTurnMessage()
-    {
-        console.log("Player " + this.currentplayer + " turn");
-    }
-
-    makeBoardChangeAfterMove(move)
-    {
-    }
-}
-
-class Drawer
-{
-    board;
-    dimx;
-    dimy;
-    constructor(board)
-    {
-        console.log("drawer constructor");
-        console.log(board);
-        this.board = board;
-        this.dimy = this.board[0].length;
-        this.dimx = this.board.length;
-        this.draw();
-    }
-
-    draw()
-    {
-
-        for (let i = 0; i < this.dimy; i++) {
-            for (let j = 0; j < this.dimx; j++) {
-                let colName = String.fromCharCode('a'.charCodeAt(0) + j)
-                let rowNum = this.dimy - i
-                let temp = document.getElementById(colName + rowNum);
-                temp.textContent = ''
-                let node = document.createTextNode(this.board[this.dimy - i - 1][j].getAsci())
-                temp.appendChild(node);
-            }
-        }
-    }
-
-}
-
 class ChessEngine extends Engine
 {
     constructor()
@@ -513,17 +399,18 @@ class ChessController extends Controller
 
     validateMove(move)
     {
-        // console.log(moveString);
-        // var move = this.convertInputToMove(moveString);
         var point1 = move.point1;
         var point2 = move.point2;
 
         if (Math.min(point1.x, point1.y) < 0 || Math.max(point1.x, point1.y) >= 8)
             return false;
-        if (this.board[point1.x][point2.y].isValidMove(this.board, point1, point2))
+        var piece = this.board[point1.x][point1.y];
+
+        if (piece.color != this.currentplayer) return false; // empty or other color
+
+        if (piece.isValidMove(this.board, point1, point2))
             return true;
-        else
-            return false;
+        return false;
     }
 
     convertInputToMove(moveString)
@@ -541,7 +428,6 @@ class ChessController extends Controller
 
         var point1 = new Point(row1, col1);
         var point2 = new Point(row2, col2);
-        console.log(this.board[row1][col1]);
         return new ChessMove(point1, point2);
     }
 
@@ -567,3 +453,8 @@ class ChessDrawer extends Drawer
 }
 
 var myEngine = new ChessEngine();
+
+
+
+var en = new ChessEngine();
+console.log(en.numOfPlayers);
