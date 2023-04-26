@@ -26,7 +26,7 @@ class Controller
         }
     }
 
-    convertInputToMove(s)
+    convertInputToMove(s) // returns move
     {
     }
 
@@ -36,7 +36,7 @@ class Controller
 
     printPlayerTurnMessage()
     {
-        console.log("Player " + this.currentplayer + 1 + " turn");
+        console.log("Player " + (this.currentplayer + 1) + " turn");
     }
 
     makeBoardChangeAfterMove(move)

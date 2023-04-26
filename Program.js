@@ -1,5 +1,3 @@
-// import {Engine} from './engine.js'
-
 class Piece
 {
     constructor()
@@ -310,7 +308,7 @@ class PieceMoves
         var x = this.point.x;
         var y = this.point.y;
 
-        if (this.color == ChessColors.white)
+        if (this.color == ChessColors.black)
         {
             if (this.checkValidPoint(new Point(x + 1, y - 1)) && this.board[x + 1][y - 1].color != this.color)
                 this.list.push(new Point(x + 1, y - 1));
@@ -326,7 +324,6 @@ class PieceMoves
         }
         else
         {
-
             if (this.checkValidPoint(new Point(x - 1, y - 1)) && this.board[x - 1][y - 1].color != this.color)
                 this.list.push(new Point(x - 1, y - 1));
 
@@ -345,7 +342,6 @@ class PieceMoves
         if (Math.min(point.x, point.y) < 0 || Math.max(point.x, point.y) >= 8) return false;
         return true;
     }
-
 }
 
 class ChessEngine extends Engine
@@ -363,29 +359,29 @@ class ChessEngine extends Engine
             for (var j = 0; j < 8; j++)
                 this.board[i][j] = new EmptyChessPiece();
 
-        this.board[0][0] = new Rook(ChessColors.white);
-        this.board[0][1] = new Knight(ChessColors.white);
-        this.board[0][2] = new Bishop(ChessColors.white);
-        this.board[0][3] = new Queen(ChessColors.white);
-        this.board[0][4] = new King(ChessColors.white);
-        this.board[0][5] = new Bishop(ChessColors.white);
-        this.board[0][6] = new Knight(ChessColors.white);
-        this.board[0][7] = new Rook(ChessColors.white);
+        this.board[7][0] = new Rook(ChessColors.white);
+        this.board[7][1] = new Knight(ChessColors.white);
+        this.board[7][2] = new Bishop(ChessColors.white);
+        this.board[7][3] = new Queen(ChessColors.white);
+        this.board[7][4] = new King(ChessColors.white);
+        this.board[7][5] = new Bishop(ChessColors.white);
+        this.board[7][6] = new Knight(ChessColors.white);
+        this.board[7][7] = new Rook(ChessColors.white);
 
 
-        this.board[7][0] = new Rook(ChessColors.black);
-        this.board[7][1] = new Knight(ChessColors.black);
-        this.board[7][2] = new Bishop(ChessColors.black);
-        this.board[7][3] = new Queen(ChessColors.black);
-        this.board[7][4] = new King(ChessColors.black);
-        this.board[7][5] = new Bishop(ChessColors.black);
-        this.board[7][6] = new Knight(ChessColors.black);
-        this.board[7][7] = new Rook(ChessColors.black);
+        this.board[0][0] = new Rook(ChessColors.black);
+        this.board[0][1] = new Knight(ChessColors.black);
+        this.board[0][2] = new Bishop(ChessColors.black);
+        this.board[0][3] = new Queen(ChessColors.black);
+        this.board[0][4] = new King(ChessColors.black);
+        this.board[0][5] = new Bishop(ChessColors.black);
+        this.board[0][6] = new Knight(ChessColors.black);
+        this.board[0][7] = new Rook(ChessColors.black);
 
         for (var j = 0; j < 8; j++)
-            this.board[1][j] = new Pawn(ChessColors.white);
+            this.board[1][j] = new Pawn(ChessColors.black);
         for (var j = 0; j < 8; j++)
-            this.board[6][j] = new Pawn(ChessColors.black);
+            this.board[6][j] = new Pawn(ChessColors.white);
     }
 }
 
