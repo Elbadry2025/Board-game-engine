@@ -1,35 +1,14 @@
 var validArray=[0,0,0,0,0,0];
-class Point{
-    x;
-    y;
-    constructor(x, y)
-    {
-        this.x = x;
-        this.y = y;
-    }
-    isEqual(otherPoint){
-        if (this.x == otherPoint.x && this.x == otherPoint.y) return true;
-        return false;
-    }
-}
-class Connect4Move
+class Connect4Move extends Move
 {
-    point1;
     constructor(point1)
     {
+        super()
         this.point1 = point1;
     }
 }
 
-class Piece{
-    constructor(){}
-    isValidMove(board, point){
-        if(board[point.x][point.y] instanceof EmptyPiece)return true;
-        return false;
-    }
-    getAsci(){}
-}
-class YellowPiece extends Piece{
+class XPiece extends Piece{
     constructor(){
         super()
     }
@@ -37,7 +16,7 @@ class YellowPiece extends Piece{
         return '🟡';
     }
 }
-class RedPiece extends Piece{
+class OPiece extends Piece{
     constructor(){
         super()
     }
@@ -76,28 +55,24 @@ class Connect4Controller extends Controller{
         super(numOfPlayers, board);
     }
     validateMove(move){
-        var point1 = move;
-        if(point1.y >= 0 && validArray[point1.y] <= 6){
+        console.log(move);
+        var point1 = move.point1;
+        if (point1.y >=0  && validArray[point1.y] < 6){
+            validArray[point1.y]++;
             return true;
         }
         return false;
-        
     }
-    convertInputToMove(moveString){
-        var col1 = parseInt(moveString);
-        var row1 = ++validArray[col1-1];
-        console.log(validArray);
-        row1--;
-        col1--;
-        var point1 = new Point(5-row1, col1);
-        console.log(point1);
-        return point1;
+    createGameMoveFromInput(indexedCells){
+        return new Connect4Move(indexedCells[0])
     }
 
     makeBoardChangeAfterMove(move){
-        let point = move
-        if(this.currentplayer == 1) this.board[move.x][move.y] = new YellowPiece();
-        else this.board[move.x][move.y] = new RedPiece();
+        let point = move.point1;
+        console.log(validArray);
+        console.log(point);
+        if(this.currentplayer == 1) this.board[5-(validArray[point.y]-1)][point.y] = new XPiece();
+        else this.board[5-(validArray[point.y]-1)][point.y] = new OPiece();
     }
 }
 class Connect4Drawer extends Drawer{

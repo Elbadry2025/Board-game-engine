@@ -54,6 +54,7 @@ class Tic_Tac_ToyController extends Controller{
         super(numOfPlayers, board);
     }
     validateMove(move){
+        console.log(move);
         var point1 = move.point1;
         if (Math.min(point1.x, point1.y) < 0 || Math.max(point1.x, point1.y) >= 3)
             return false;
