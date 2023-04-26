@@ -3,12 +3,13 @@ class Drawer
     board;
     dimx;
     dimy;
+
     constructor(board)
     {
+        console.log("drawer constructor");
         this.board = board;
         this.dimy = this.board[0].length;
         this.dimx = this.board.length;
-        console.log(this.board)
         this.draw();
     }
 
