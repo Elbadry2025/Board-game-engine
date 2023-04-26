@@ -1,11 +1,10 @@
-class ChessMove
+class ChessMove extends Move
 {
-    point1;
-    point2;
     constructor(point1, point2)
     {
-        this.point1 = point1;
-        this.point2 = point2;
+        super()
+        this.point1 = point1
+        this.point2 = point2
     }
 }
 
@@ -381,23 +380,26 @@ class ChessController extends Controller
         return false;
     }
 
-    convertInputToMove(moveString)
-    {
-        var list = moveString.split(" ");
-        var col1 = parseInt(list[0]);
-        var row1 = parseInt(list[1]);
-        var col2 = parseInt(list[2]);
-        var row2 = parseInt(list[3]);
-
-        row1--;
-        col1--;
-        row2--;
-        col2--;
-
-        var point1 = new Point(row1, col1);
-        var point2 = new Point(row2, col2);
-        return new ChessMove(point1, point2);
+    createGameMoveFromInput(indexedCells){
+        return new ChessMove(indexedCells[0], indexedCells[1])
     }
+    // convertInputToMove(moveString)
+    // {
+    //     var list = moveString.split(" ");
+    //     var col1 = parseInt(list[0]);
+    //     var row1 = parseInt(list[1]);
+    //     var col2 = parseInt(list[2]);
+    //     var row2 = parseInt(list[3]);
+    //
+    //     row1--;
+    //     col1--;
+    //     row2--;
+    //     col2--;
+    //
+    //     var point1 = new Point(row1, col1);
+    //     var point2 = new Point(row2, col2);
+    //     return new ChessMove(point1, point2);
+    // }
 
     makeBoardChangeAfterMove(move)
     {

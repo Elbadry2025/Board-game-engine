@@ -15,6 +15,14 @@ class CheckersPiece extends Piece{
         return this.asci
     }
 }
+
+class CheckersMove extends Move {
+    constructor(point1, point2) {
+        super();
+        this.point1 = point1
+        this.point2 = point2
+    }
+}
 const blackPiece = '⚫';
 const redPiece = '🔴';
 const redQueen = '⭕'
@@ -60,9 +68,13 @@ class CheckersController extends Controller{
         for (let i = 0; i < n; i++)
             this.paths[i] = new Array(n)
     }
+    createGameMoveFromInput(indexedCells){
+        return new CheckersMove(indexedCells[0], indexedCells[1])
+    }
+
     validateMove(indexedMoves){
-        let firstCell = indexedMoves[0]
-        let secondCell = indexedMoves[1]
+        let firstCell = indexedMoves.point1
+        let secondCell = indexedMoves.point2
         let currentPiece = this.board[firstCell.x][firstCell.y]
 
         if(indexedMoves.length > 2)
@@ -110,7 +122,6 @@ class CheckersController extends Controller{
             }
             else if(this.board[nx][ny] !== emptySquare && this.isValidDimensions(nx+dx[i], ny+dy[i]) &&
                 this.board[nx+dx[i]][ny+dy[i]] == emptySquare){
-
                 validCells.push(new Point(nx+dx[i], ny+dy[i]))
                 this.paths[nx][ny] = cell
                 this.paths[nx+dx[i]][ny+dy[i]] = new Point(nx, ny)
@@ -123,9 +134,9 @@ class CheckersController extends Controller{
         return x >= 0 && x < n && y >= 0 && y < n
     }
 
-    makeBoardChangeAfterMove(indexedMove) {
-        let cell1 = indexedMove[0]
-        let cell2 = indexedMove[1]
+    makeBoardChangeAfterMove(move) {
+        let cell1 = move.point1
+        let cell2 = move.point2
         let node = cell2
         while ((node.x != cell1.x || node.y != cell1.y) && node.x != -1){
             console.log("deleted: ", node)
@@ -146,17 +157,6 @@ class CheckersController extends Controller{
             this.board[cell2.x][cell2.y].dy = [-1, 1, -1, 1]
             this.board[cell2.x][cell2.y].asci = blackQueen
         }
-    }
-
-    convertInputToMove(playerMove) {
-        let cells = playerMove.split(" ")
-        let indexedCells = [];
-        cells.forEach(element => {
-            let col = element.charAt(0).charCodeAt(0) - 'a'.charCodeAt(0)
-            let row = n - parseInt(element.charAt(1));
-            indexedCells.push(new Point(row, col))
-        })
-        return indexedCells
     }
 }
 let engine = new CheckersEngine();

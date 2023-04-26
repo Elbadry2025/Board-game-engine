@@ -26,8 +26,22 @@ class Controller
         }
     }
 
-    convertInputToMove(s) // returns move
-    {
+    convertInputToMove(playerMove) {
+        let cells = playerMove.split(" ")
+        let indexedCells = [];
+        cells.forEach(element => {
+            let col = element.charAt(0).charCodeAt(0) - 'a'.charCodeAt(0)
+            let row = this.board.length - parseInt(element.charAt(1));
+            indexedCells.push(new Point(row, col))
+        })
+        return this.createGameMoveFromInput(indexedCells)
+    }
+
+    /**
+     * takes an array of points and converts it to a game move
+     */
+    createGameMoveFromInput(indexedCells){
+
     }
 
     validateMove(moveString)
@@ -36,7 +50,7 @@ class Controller
 
     printPlayerTurnMessage()
     {
-        console.log("Player " + (this.currentplayer + 1) + " turn");
+        console.log("Player " + (parseInt(this.currentplayer) + 1) + " turn");
     }
 
     makeBoardChangeAfterMove(move)

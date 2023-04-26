@@ -48,3 +48,9 @@ class Piece
     {
     }
 }
+
+class Move
+{
+    constructor() {
+    }
+}

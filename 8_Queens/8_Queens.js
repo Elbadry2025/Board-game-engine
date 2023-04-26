@@ -1,30 +1,13 @@
-class Point{
-    x;
-    y;
-    constructor(x, y)
-    {
-        this.x = x;
-        this.y = y;
-    }
-    
-    isEqual(otherPoint){
-        if (this.x == otherPoint.x && this.x == otherPoint.y) return true;
-        return false;
-    }
-}
-class ChessMove
+class ChessMove extends Move
 {
     point1;
     constructor(point1)
     {
+        super()
         this.point1 = point1;
     }
 }
 
-class Piece{
-    constructor(){}
-    getAsci(){}
-}
 class QueenPiece extends Piece{
     constructor(){
         super()
@@ -83,8 +66,11 @@ class QueensController extends Controller{
         var numOfPlayers = 1;
         super(numOfPlayers, board);
     }
+    createGameMoveFromInput(indexedCells){
+        return new ChessMove(indexedCells[0])
+    }
     validateMove(move){
-        var point1 = move;
+        var point1 = move.point1;
         if (Math.min(point1.x, point1.y) < 0 || Math.max(point1.x, point1.y) >= 8)
             return false;
 
@@ -96,20 +82,20 @@ class QueensController extends Controller{
             return true;
         return false;
     }
-    convertInputToMove(moveString){
-        var list = moveString.split(" ");
-        var col1 = parseInt(list[0]);
-        var row1 = parseInt(list[1]);
-
-        row1--;
-        col1--;
-
-        var point1 = new Point(row1, col1);
-        return point1;
-    }
+    // convertInputToMove(moveString){
+    //     var list = moveString.split(" ");
+    //     var col1 = parseInt(list[0]);
+    //     var row1 = parseInt(list[1]);
+    //
+    //     row1--;
+    //     col1--;
+    //
+    //     var point1 = new Point(row1, col1);
+    //     return point1;
+    // }
 
     makeBoardChangeAfterMove(move){
-        let point = move
+        let point = move.point1
         if(this.board[point.x][point.y] instanceof EmptyPiece){
             this.board[point.x][point.y] = new QueenPiece();
         }

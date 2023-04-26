@@ -1,20 +1,6 @@
-class Point{
-    x;
-    y;
-    constructor(x, y)
-    {
-        this.x = x;
-        this.y = y;
-    }
-    isEqual(otherPoint){
-        if (this.x == otherPoint.x && this.x == otherPoint.y) return true;
-        return false;
-    }
-}
-class sudokuMove{
-    point;
-    val;
+class SudokuMove extends Move{
     constructor(point,val){
+        super()
         this.point = point;
         this.val = val;
     }
@@ -190,11 +176,6 @@ try {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // console.log(newStartingBoard(50))
-class Piece{
-    constructor(){}
-    isValidMove(board, point){}
-    getAsci(){}
-}
 
 function checkVerticalAndHorizontal(board, point, val){
     for(let i = 0;i<9;i++){
@@ -226,7 +207,7 @@ class numberPiece extends Piece{
         return this.changable;
     }
     getAsci(){
-        return this.val; // TODO get teh ascii of val
+        return this.val; // TODO get the ascii of val
     }
 }
 class EmptyPiece extends Piece{
@@ -274,18 +255,16 @@ class sudokuController extends Controller{
         console.log(piece)
         return piece.isValidMove(this.board, move);
     }
+    createGameMoveFromInput(point, val){
+        return new SudokuMove(point, val)
+    }
     convertInputToMove(moveString){
         var list = moveString.split(" ");
-        var col = parseInt(list[0]);
-        var row = parseInt(list[1]);
-        var val = parseInt(list[2]);
-        row--;
-        col--;
-        var point = new Point(row, col);
-        var move  = new sudokuMove(point,val);
-        return move;
+        var col = list[0].charAt(0).charCodeAt(0) - 'a'.charCodeAt(0)
+        var row = this.board.length - parseInt(list[0].charAt(1));
+        var val = parseInt(list[1]);
+        return this.createGameMoveFromInput(new Point(row,col), val);
     }
-
     makeBoardChangeAfterMove(move){
         let point = move
         this.board[move.point.x][move.point.y] = new numberPiece(move.val, true)
