@@ -2,36 +2,33 @@ body {
     background: #e8e7de;
     font-family: 'Montserrat', sans-serif;
 }
-.board {
-    width: 640px;
-    height: 640px;
-    margin: 20px;
-    border: 10px solid #000;
+.board{
+    width: 300px;
+    height: 300px;
+    margin: auto;
+    border: 5px solid #000;
     border-radius: 4px;
-    background: #e59110;
+    background: #e5901051;
     box-shadow:  5px 5px 8px #bebdb6,
     -5px -5px 8px #ffffff;
 }
-.black {
-    float: left;
-    width: 80px;
-    height: 80px;
-    background-color: #e59110;
-    font-size:50px;
-    text-align:center;
-    display: table-cell;
-    vertical-align:middle;
-}
 .white {
     float: left;
-    width: 80px;
-    height: 80px;
-    background-color: #ffcfb6;
-    font-size:50px;
+    width: 100px;
+    height: 100px;
+    background-color: #5cb4f3b7;
+    font-size:70px;
     text-align:center;
     display: table-cell;
     vertical-align:middle;
 }
-.input{
-    margin: auto;
+.black {
+    float: left;
+    width: 100px;
+    height: 100px;
+    background-color: #ffcfb6;
+    font-size:70px;
+    text-align:center;
+    display: table-cell;
+    vertical-align:middle;
 }

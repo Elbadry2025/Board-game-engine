@@ -1,28 +1,163 @@
-class CheckersEngine {
+class Piece {
+    constructor(player, unicode) {
+        this.player = player
+        this.unicode = unicode
+        if(unicode == redPiece){
+            this.dx = [-1, -1]
+            this.dy = [-1, 1]
+        }else{
+            this.dx = [1, 1]
+            this.dy = [-1, 1]
+        }
+    }
+}
+const blackPiece = '⚫';
+const redPiece = '🔴';
+const redQueen = '⭕'
+const blackQueen = '⚈'
+const emptySquare = new Piece(-1, " ");
+const n = 8;
+
+class CheckersEngine extends Engine {
     constructor() {
-        this.board = new Board().board
-        this.controller = new Controller(this.board)
-        this.drawer = new Drawer(this.board)
-        this.drawer.update(this.board);
+        super(2, n, n)
+        this.controller = new CheckersController(this.board)
+        this.drawer = new CheckersDrawer(this.board)
+        this.drawer.draw()
         console.log(this.board)
     }
 
-    // TODO remove this
-    takeInputAndMoveToControllerAndDraw()
-    {
-        let playerMove = document.getElementById('input').value
-        let indexedMove = this.convertInputToIndices(playerMove)
-        if(this.controller.validateInput(indexedMove)){
-            console.log(indexedMove)
-            this.board[indexedMove[1].x][indexedMove[1].y] = this.board[indexedMove[0].x][indexedMove[0].y]
-            this.board[indexedMove[0].x][indexedMove[0].y] = new Piece(1, emptySquare)
-            this.drawer.update(this.board);
-            console.log(this.board)
-        }else{
-            console.log("invalid move")
+    initializeBoardDimensions() {
+        this.board =  new Array(n).fill().map(_ => new Array(n).fill(emptySquare))
+    }
+
+    initializeBoardPieces(){
+        for (let i = 1; i < n; i+=2)
+        {
+            this.board[0][i] = new Piece(1, blackPiece)
+            this.board[1][i-1] = new Piece(1, blackPiece)
+            this.board[2][i] = new Piece(1, blackPiece)
+
+            this.board[5][i-1] = new Piece(0, redPiece)
+            this.board[6][i] = new Piece(0, redPiece)
+            this.board[7][i-1] = new Piece(0, redPiece)
         }
     }
-    convertInputToIndices(playerMove){
+}
+
+class CheckersDrawer extends Drawer{
+    constructor(board) {
+        super(board)
+    }
+    draw(){
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                let colName = String.fromCharCode('a'.charCodeAt(0) + j)
+                let rowNum = n - i
+                let temp = document.getElementById(colName + rowNum);
+                temp.textContent = ''
+                let node = document.createTextNode(this.board[i][j].unicode)
+                temp.appendChild(node);
+            }
+        }
+    }
+}
+class CheckersController extends Controller{
+    constructor(board) {
+        super(2, board)
+        this.paths = new Array(new Array(n))
+        for (let i = 0; i < n; i++)
+            this.paths[i] = new Array(n)
+    }
+    validateMove(indexedMoves){
+        let firstCell = indexedMoves[0]
+        let secondCell = indexedMoves[1]
+        let currentPiece = this.board[firstCell.x][firstCell.y]
+
+        if(indexedMoves.length > 2)
+            return false
+        if(currentPiece === emptySquare || this.board[secondCell.x][secondCell.y] != emptySquare
+         || currentPiece.player != this.currentplayer)
+            return false
+
+        console.log(this.currentplayer)
+        let nullPoint = new Point(-1, -1)
+        for (let i = 0; i < n; i++)
+            this.paths[i].fill(nullPoint)
+
+        // get all valid moves for this piece
+        let validMoves = this.getValidMoves(firstCell)
+        console.log("valid moves: ", validMoves)
+
+        // check if this move is in the list of valid moves
+        let flag = false
+        validMoves.forEach(element => {
+            console.log(element, secondCell)
+            if(element.x == secondCell.x && element.y == secondCell.y)
+                flag = true
+        })
+        return flag
+    }
+
+    getValidMoves(cell, paths){
+        let validCells = [];
+        this.populateValidCellsArray(cell, 0, cell ,validCells)
+        return validCells
+    }
+
+    // TODO make queen
+    populateValidCellsArray(cell, depth, parent, validCells) {
+        let dx = this.board[cell.x][cell.y].dx
+        let dy = this.board[cell.x][cell.y].dy
+        for (let i = 0; i < dx.length; i++){
+            let nx = cell.x + dx[i]
+            let ny = cell.y + dy[i]
+            if(!this.isValidDimensions(nx, ny))
+                continue;
+            if(this.board[nx][ny] === emptySquare && depth === 0){
+                this.paths[nx][ny] = cell
+                validCells.push(new Point(nx, ny))
+            }
+            else if(this.board[nx][ny] !== emptySquare && this.isValidDimensions(nx+dx[i], ny+dy[i]) &&
+                this.board[nx+dx[i]][ny+dy[i]] == emptySquare){
+
+                validCells.push(new Point(nx+dx[i], ny+dy[i]))
+                this.paths[nx][ny] = cell
+                this.paths[nx+dx[i]][ny+dy[i]] = new Point(nx, ny)
+                this.populateValidCellsArray(new Point(nx+dx[i], ny+dy[i]), depth+1, cell, validCells)
+            }
+        }
+    }
+
+    isValidDimensions(x, y){
+        return x >= 0 && x < n && y >= 0 && y < n
+    }
+
+    makeBoardChangeAfterMove(indexedMove) {
+        let cell1 = indexedMove[0]
+        let cell2 = indexedMove[1]
+        let node = cell2
+        while ((node.x != cell1.x || node.y != cell1.y) && node.x != -1){
+            console.log("deleted: ", node)
+            this.board[node.x][node.y] = emptySquare
+            node = this.paths[node.x][node.y]
+        }
+
+        this.board[cell2.x][cell2.y] = this.board[cell1.x][cell1.y]
+        this.board[cell1.x][cell1.y] = emptySquare
+        if(cell2.x == 0 && this.board[cell2.x][cell2.y].unicode == redPiece){
+            this.board[cell2.x][cell2.y].dx = [-1, -1, 1, 1]
+            this.board[cell2.x][cell2.y].dy = [-1, 1, -1, 1]
+        }else if(cell2.x == n && this.board[cell2.x][cell2.y].unicode == blackPiece){
+            this.board[cell2.x][cell2.y].dx = [-1, -1, 1, 1]
+            this.board[cell2.x][cell2.y].dy = [-1, 1, -1, 1]
+            this.board[cell2.x][cell2.y].unicode = blackQueen
+        }
+
+
+    }
+
+    convertInputToMove(playerMove) {
         let cells = playerMove.split(" ")
         let indexedCells = [];
         cells.forEach(element => {
@@ -32,125 +167,5 @@ class CheckersEngine {
         })
         return indexedCells
     }
-
-}
-
-
-const blackPiece = '⚫';
-const redPiece = '🔴';
-const emptySquare = ' ';
-const n = 8;
-
-class Piece {
-    constructor(player, unicode) {
-        this.player = player
-        this.unicode = unicode
-    }
-
-}
-class Board {
-    constructor() {
-        this.board =  new Array(8).fill().map(_ => new Array(8).fill(new Piece(0, emptySquare)))
-        this.#initBoard()
-    }
-    #initBoard() {
-        for (let i = 1; i < n; i+=2){
-            this.board[0][i] = new Piece(2, blackPiece)
-            this.board[1][i-1] = new Piece(2, blackPiece)
-            this.board[2][i] = new Piece(2, blackPiece)
-
-            this.board[5][i-1] = new Piece(1, redPiece)
-            this.board[6][i] = new Piece(1, redPiece)
-            this.board[7][i-1] = new Piece(1, redPiece)
-        }
-
-    }
-}
-
-class Drawer {
-    constructor(board) {
-        this.board = board
-    }
-    update(board){
-        for (let i = 0; i < n; i++) {
-            for (let j = 0; j < n; j++) {
-                let colName = String.fromCharCode('a'.charCodeAt(0) + j)
-                let rowNum = n - i
-                let temp = document.getElementById(colName + rowNum);
-                temp.textContent = ''
-                let node = document.createTextNode(board[i][j].unicode)
-                temp.appendChild(node);
-            }
-        }
-    }
-}
-class Controller {
-
-    constructor(board) {
-        this.board = board
-    }
-    validateInput(indexedMoves){
-        let firstCell = indexedMoves[0]
-        let secondCell = indexedMoves[1]
-        let currentPiece = this.board[firstCell.x][firstCell.y]
-
-        if(indexedMoves.length > 2)
-            return false
-        if(currentPiece.unicode === emptySquare || !(this.board[secondCell.x][secondCell.y].unicode === emptySquare))
-            return false
-
-        // get all valid moves for this piece
-        let validMoves = this.getValidMoves(firstCell)
-        console.log(validMoves)
-        let flag = false
-        // check if this move is in the list of valid moves
-        validMoves.forEach(element => {
-            console.log(element, secondCell)
-            if(element.x == secondCell.x && element.y == secondCell.y)
-                flag = true
-            else
-                console.log("move not correct")
-        })
-        return flag
-    }
-
-    getValidMoves(cell){
-        let validCells = [];
-        this.recur(cell, 0, validCells)
-        return validCells
-    }
-
-    // TODO make queen
-    recur(cell, depth, validCells) {
-        let dx = [-1, -1]
-        let dy = [-1, 1]
-        for (let i = 0; i < dx.length; i++){
-            let nx = cell.x + dx[i]
-            let ny = cell.y + dy[i]
-            if(nx < 0 || nx >= n  || ny < 0 || ny >= n)
-                break;
-            if(this.board[nx][ny].unicode === emptySquare && depth === 0)
-                validCells.push(new Point(nx, ny))
-            else if(this.board[nx][ny].unicode !== emptySquare && this.board[nx+dx[i]][ny+dy[i]].unicode != emptySquare)
-                this.recur(new Point(nx+dx[i], ny+dy[i]), depth+1, validCells)
-        }
-    }
-
 }
 let engine = new CheckersEngine();
-class Point
-{
-    x;
-    y;
-    constructor(x, y)
-    {
-        this.x = x;
-        this.y = y;
-    }
-
-    isEqual(otherPoint)
-    {
-        if (this.x == otherPoint.x && this.x == otherPoint.y) return true;
-        return false;
-    }
-}
