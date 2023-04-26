@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chess</title>
+    <link rel="stylesheet" href="../chess.css" type="text/css">
+</head>
+<body>
+<div id="board" class="board"></div>
+
+<input type="text" id="nameInput">
+<button onclick="myEngine.takeInputAndMoveToControllerAndDraw()">Submit</button>
+
+<!-- <script>
+    const chars = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+    let counter = 0;
+    let dimx = 8;
+    let dimy = 8;
+    let container = document.getElementById('board');
+    for (let i = 0; i < dimx*dimy; i++){
+        if(i%dimy==0&&(dimx*dimy)%2==0)counter++
+        let element = document.createElement('div');
+        if(counter%2==0) element.className = "white"
+        else element.className = "black"
+        element.id = chars[i%9]+(Math.trunc(i/9)+1);
+        container.appendChild(element);
+        counter++;
+    };
+</script> -->
+<script src="../boardinit.js"></script>
+<script src="../AbstractEngine/Engine.js"> </script>
+<script src="../AbstractEngine/Drawer.js"> </script>
+<script src="../AbstractEngine/Controller.js"> </script>
+<script src="8_Queens.js"> </script>
+
+</body>
+</html>

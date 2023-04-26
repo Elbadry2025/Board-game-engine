@@ -1,16 +1,3 @@
-// import {Engine} from './engine.js'
-
-class Piece
-{
-    constructor()
-    {
-    }
-
-    getAsci()
-    {
-    }
-}
-
 class ChessMove
 {
     point1;
@@ -436,8 +423,3 @@ class ChessDrawer extends Drawer
 }
 
 var myEngine = new ChessEngine();
-
-
-
-var en = new ChessEngine();
-console.log(en.numOfPlayers);

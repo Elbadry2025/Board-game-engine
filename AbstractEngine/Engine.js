@@ -14,6 +14,7 @@ class Engine
         this.numOfPlayers = numOfPlayers;
         this.initializeBoardDimensions();
         this.initializeBoardPieces();
+        initializeHTML(dimx, dimy);
     }
 
     initializeBoardDimensions()
@@ -33,5 +34,16 @@ class Engine
         this.controller.convertAndValidateInputAndMakeMove(moveString);
         this.drawer.draw();
         this.controller.printPlayerTurnMessage();
+    }
+}
+
+class Piece
+{
+    constructor()
+    {
+    }
+
+    getAsci()
+    {
     }
 }

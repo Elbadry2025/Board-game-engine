@@ -1,8 +1,9 @@
-class Piece {
-    constructor(player, unicode) {
+class CheckersPiece extends Piece{
+    constructor(player, asci) {
+        super()
         this.player = player
-        this.unicode = unicode
-        if(unicode == redPiece){
+        this.asci = asci
+        if(asci == redPiece){
             this.dx = [-1, -1]
             this.dy = [-1, 1]
         }else{
@@ -10,12 +11,15 @@ class Piece {
             this.dy = [-1, 1]
         }
     }
+    getAsci(){
+        return this.asci
+    }
 }
 const blackPiece = '⚫';
 const redPiece = '🔴';
 const redQueen = '⭕'
 const blackQueen = '⚈'
-const emptySquare = new Piece(-1, " ");
+const emptySquare = new CheckersPiece(-1, " ");
 const n = 8;
 
 class CheckersEngine extends Engine {
@@ -24,7 +28,6 @@ class CheckersEngine extends Engine {
         this.controller = new CheckersController(this.board)
         this.drawer = new CheckersDrawer(this.board)
         this.drawer.draw()
-        console.log(this.board)
     }
 
     initializeBoardDimensions() {
@@ -34,13 +37,13 @@ class CheckersEngine extends Engine {
     initializeBoardPieces(){
         for (let i = 1; i < n; i+=2)
         {
-            this.board[0][i] = new Piece(1, blackPiece)
-            this.board[1][i-1] = new Piece(1, blackPiece)
-            this.board[2][i] = new Piece(1, blackPiece)
+            this.board[0][i] = new CheckersPiece(1, blackPiece)
+            this.board[1][i-1] = new CheckersPiece(1, blackPiece)
+            this.board[2][i] = new CheckersPiece(1, blackPiece)
 
-            this.board[5][i-1] = new Piece(0, redPiece)
-            this.board[6][i] = new Piece(0, redPiece)
-            this.board[7][i-1] = new Piece(0, redPiece)
+            this.board[5][i-1] = new CheckersPiece(0, redPiece)
+            this.board[6][i] = new CheckersPiece(0, redPiece)
+            this.board[7][i-1] = new CheckersPiece(0, redPiece)
         }
     }
 }
@@ -48,18 +51,6 @@ class CheckersEngine extends Engine {
 class CheckersDrawer extends Drawer{
     constructor(board) {
         super(board)
-    }
-    draw(){
-        for (let i = 0; i < n; i++) {
-            for (let j = 0; j < n; j++) {
-                let colName = String.fromCharCode('a'.charCodeAt(0) + j)
-                let rowNum = n - i
-                let temp = document.getElementById(colName + rowNum);
-                temp.textContent = ''
-                let node = document.createTextNode(this.board[i][j].unicode)
-                temp.appendChild(node);
-            }
-        }
     }
 }
 class CheckersController extends Controller{
@@ -92,7 +83,6 @@ class CheckersController extends Controller{
         // check if this move is in the list of valid moves
         let flag = false
         validMoves.forEach(element => {
-            console.log(element, secondCell)
             if(element.x == secondCell.x && element.y == secondCell.y)
                 flag = true
         })
@@ -145,16 +135,17 @@ class CheckersController extends Controller{
 
         this.board[cell2.x][cell2.y] = this.board[cell1.x][cell1.y]
         this.board[cell1.x][cell1.y] = emptySquare
-        if(cell2.x == 0 && this.board[cell2.x][cell2.y].unicode == redPiece){
+        if(cell2.x == 0 && this.board[cell2.x][cell2.y].asci == redPiece){
+            console.log("queen promoted");
             this.board[cell2.x][cell2.y].dx = [-1, -1, 1, 1]
             this.board[cell2.x][cell2.y].dy = [-1, 1, -1, 1]
-        }else if(cell2.x == n && this.board[cell2.x][cell2.y].unicode == blackPiece){
+            this.board[cell2.x][cell2.y].asci = redQueen
+        }else if(cell2.x == n-1 && this.board[cell2.x][cell2.y].asci == blackPiece){
+            console.log("queen promoted");
             this.board[cell2.x][cell2.y].dx = [-1, -1, 1, 1]
             this.board[cell2.x][cell2.y].dy = [-1, 1, -1, 1]
-            this.board[cell2.x][cell2.y].unicode = blackQueen
+            this.board[cell2.x][cell2.y].asci = blackQueen
         }
-
-
     }
 
     convertInputToMove(playerMove) {
