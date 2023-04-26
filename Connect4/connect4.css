@@ -1,0 +1,36 @@
+body {
+    background: #e8e7de;
+    font-family: 'Montserrat', sans-serif;
+}
+.board{
+    width: 600px;
+    height: 600px;
+    margin: auto;
+    border: 5px solid #000;
+    border-radius: 4px;
+    background: rgb(55, 50, 150);
+    box-shadow:  5px 5px 8px #bebdb6,
+    -5px -5px 8px #ffffff;
+}
+.white {
+    border-radius: 50%;
+    float: left;
+    width: 100px;
+    height: 100px;
+    background-color: #ffffff;
+    font-size:90px;
+    text-align:center;
+    display: table-cell;
+    vertical-align:middle;
+}
+.black {
+    border-radius: 50%;
+    float: left;
+    width: 100px;
+    height: 100px;
+    background-color: #ffffff;
+    font-size:90px;
+    text-align:center;
+    display: table-cell;
+    vertical-align:middle;
+}
