@@ -42,9 +42,9 @@ class Tic_Tac_ToeEngine extends Engine{
         this.drawer = new Tic_Tac_ToeDrawer(this.board, this.boardCSS);
     }
     initializeCssBoard() {
-        let cell = new Cell("#5cb4f3b7", 100, 100, 70, undefined)
-        document.getElementById('board').style.width = 300 + 'px'
-        document.getElementById('board').style.height = 300 + 'px'
+        let cell = new Cell("#5cb4f3b7", 100, 100, 70, undefined, 2)
+        document.getElementById('board').style.width = 309.9 + 'px'
+        document.getElementById('board').style.height = 309.9 + 'px'
         for (let i = 0; i < this.dimx; i++)
             for (let j = 0; j < this.dimy; j++)
                 this.boardCSS[i][j] = cell

@@ -55,8 +55,8 @@ class QueensEngine extends Engine{
         this.drawer = new QueensDrawer(this.board, this.boardCSS);
     }
     initializeCssBoard(){
-        let cell1 = new Cell( "#e59110", undefined, undefined, undefined, 'circle')
-        let cell2 = new Cell( "#ffcfb6", undefined, undefined, undefined, 'circle')
+        let cell1 = new Cell( "#e59110", undefined, undefined, undefined, 'square')
+        let cell2 = new Cell( "#ffcfb6", undefined, undefined, undefined, 'square')
         for(let i= 0;i<this.dimx;i++) {
             for (let j = 0; j < this.dimy; j++) {
                 if ((i+j) % 2 == 0)

@@ -231,10 +231,10 @@ class sudokuEngine extends Engine{
         this.drawer = new sudokuDrawer(this.board, this.boardCSS);
     }
     initializeCssBoard(){
-        let cell1 = new Cell( "#5cb4f3b7", 50, 50, 40, undefined)
-        let cell2 = new Cell( "#ffcfb6", 50, 50, 40, undefined)
-        document.getElementById('board').style.width = 450 + 'px'
-        document.getElementById('board').style.height = 450 + 'px'
+        let cell1 = new Cell( "#5cb4f3b7", 50, 50, 40, undefined,1.5)
+        let cell2 = new Cell( "#ffcfb6", 50, 50, 40, undefined,1.5)
+        document.getElementById('board').style.width = 465 + 'px'
+        document.getElementById('board').style.height = 465 + 'px'
         for(let i= 0;i<this.dimx;i++) {
             for (let j = 0; j < this.dimy; j++) {
                 if ((i+j) % 2 == 0)
