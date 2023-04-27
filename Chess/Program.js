@@ -24,6 +24,7 @@ class ChessPiece extends Piece
     }
     getValidMoves(board, point)
     {
+
     }
     isValidMove(board, point, newpoint)
     {
@@ -167,7 +168,8 @@ class Knight extends ChessPiece
     {
         var list = [];
         var pieceMoves = new PieceMoves(board, point, this.color, list);
-        pieceMoves.addKingMoves();
+
+        pieceMoves.addKnightMoves();
 
         return list;
     }
@@ -189,7 +191,6 @@ class Pawn extends ChessPiece
 
     getValidMoves(board, point)
     {
-        console.log("getvalidmoves");
         var list = [];
         var pieceMoves = new PieceMoves(board, point, this.color, list);
         pieceMoves.addPawnMoves();
@@ -222,19 +223,18 @@ class PieceMoves
 
     addMovesInConsecutiveCellsChess(inc1, inc2, range)
     {
-        for (var i = 0; i < range; i++)
+        for (var i = 1; i <= range; i++)
         {
             var x2 = this.point.x + i * inc1, y2 = this.point.y + i * inc2;
-            if (!Square.isvalid_square(x2, y2)) return;
-            if (!checkValidPoint(x2, y2))
+            if (!this.checkValidPoint(new Point(x2, y2))) return;
 
-                if (this.board[x2][y2].color != ChessColors.none)
-                {
-                    if (this.board[x2][y2].color != color)
-                        list.push(new Point(x2, y2));
-                    return;
-                }
-            this.list.add(new Point(x2, y2));
+            if (this.board[x2][y2].color != ChessColors.none)
+            {
+                if (this.board[x2][y2].color != this.color)
+                    this.list.push(new Point(x2, y2));
+                return;
+            }
+            this.list.push(new Point(x2, y2));
         }
     }
 
@@ -244,7 +244,7 @@ class PieceMoves
         var dy = [0, 0, 1, -1];
 
         for (var ii = 0; ii < 4; ii++)
-            this.getMovesInConsecutiveCellsChess(dx[ii], dy[ii], 8);
+            this.addMovesInConsecutiveCellsChess(dx[ii], dy[ii], 8);
     }
 
     addMovesDiagonal()
@@ -253,7 +253,7 @@ class PieceMoves
         var dy = [1, -1, 1, -1];
 
         for (var ii = 0; ii < 4; ii++)
-            this.getMovesInConsecutiveCellsChess(dx[ii], dy[ii], 8);
+            this.addMovesInConsecutiveCellsChess(dx[ii], dy[ii], 8);
     }
 
     addKingMoves()
@@ -262,7 +262,7 @@ class PieceMoves
         var dy = [-1, 0, 1, -1, 0, 1, -1, 1];
 
         for (var ii = 0; ii < 8; ii++)
-            this.getMovesInConsecutiveCellsChess(dx[ii], dy[ii], 1);
+            this.addMovesInConsecutiveCellsChess(dx[ii], dy[ii], 1);
     }
 
     addKnightMoves()
@@ -271,7 +271,7 @@ class PieceMoves
         var dy = [2, -2, 2, -2, 1, -1, 1, -1];
 
         for (var ii = 0; ii < 8; ii++)
-            this.getMovesInConsecutiveCellsChess(dx[ii], dy[ii], 1);
+            this.addMovesInConsecutiveCellsChess(dx[ii], dy[ii], 1);
     }
 
     addPawnMoves()
@@ -281,31 +281,51 @@ class PieceMoves
 
         if (this.color == ChessColors.black)
         {
-            if (this.checkValidPoint(new Point(x + 1, y - 1)) && this.board[x + 1][y - 1].color != this.color)
+            if (this.pointValidForPawn(x + 1, y - 1))
                 this.list.push(new Point(x + 1, y - 1));
 
-            if (this.checkValidPoint(new Point(x+1, y + 1)) && this.board[x + 1][y + 1].color != this.color)
+            if (this.pointValidForPawn(x + 1, y + 1))
                 this.list.push(new Point(x + 1, y + 1));
 
-            if (this.board[x + 1][y].color == ChessColors.none)
+            if (this.pointValidForPawn(x + 1, y))
                 this.list.push(new Point(x + 1, y));
 
-            if (x == 1 && this.board[x + 2][y].color == ChessColors.none && this.board[x + 1][y].color == ChessColors.none)
+            if (x == 1 && this.pointValidForPawn(x + 2, y))
                 this.list.push(new Point(x + 2, y));
         }
         else
         {
-            if (this.checkValidPoint(new Point(x - 1, y - 1)) && this.board[x - 1][y - 1].color != this.color)
+            if (this.pointValidForPawn(x - 1, y - 1))
                 this.list.push(new Point(x - 1, y - 1));
 
-            if (this.checkValidPoint(new Point(x - 1, y + 1)) && this.board[x - 1][y - 1].color != this.color)
+            if (this.pointValidForPawn(x - 1, y + 1))
                 this.list.push(new Point(x - 1, y + 1));
 
-            if (this.board[x - 1][y].color == ChessColors.none)
+            if (this.pointValidForPawn(x - 1, y))
                 this.list.push(new Point(x - 1, y));
-            if (x == 6 && this.board[x - 2][y].color == ChessColors.none && this.board[x - 1][y].color == ChessColors.none)
+
+            if (x == 6 && this.pointValidForPawn(x - 2, y))
                 this.list.push(new Point(x - 2, y));
         }
+    }
+
+    pointValidForPawn(x, y)
+    {
+        if (!this.checkValidPoint(new Point(x, y))) return false;
+        if (y != this.point.y)
+        {
+            if (this.board[x][y].color == ChessColors.none || this.board[x][y].color == this.color)
+                return false;
+            return true;
+        }
+        if (Math.abs(x - this.point.x) == 2)
+        {
+            var xmid = (x + this.point.x) / 2;
+            if (this.board[xmid][y].color != ChessColors.none)
+                return false;
+        }
+        if (this.board[x][y].color != ChessColors.none) return false;
+        return true;
     }
 
     checkValidPoint(point)
@@ -323,7 +343,8 @@ class ChessEngine extends Engine
         this.controller = new ChessController(this.board);
         this.drawer = new ChessDrawer(this.board, this.boardCSS);
     }
-    initializeCssBoard(){
+    initializeCssBoard()
+    {
         let cell1 = new Cell( '#e59110', undefined, undefined, undefined, undefined)
         let cell2 = new Cell( '#ffcfb6', undefined, undefined, undefined, undefined)
         for(let i= 0;i<this.dimx;i++) {
@@ -334,7 +355,7 @@ class ChessEngine extends Engine
                     this.boardCSS[i][j] = cell2
             }
         }
-        console.log(this.boardCSS)
+        //console.log(this.boardCSS)
     }
     initializeBoardPieces()
     {
@@ -378,6 +399,7 @@ class ChessController extends Controller
 
     validateMove(move)
     {
+        console.log(move);
         var point1 = move.point1;
         var point2 = move.point2;
 
@@ -395,23 +417,6 @@ class ChessController extends Controller
     createGameMoveFromInput(indexedCells){
         return new ChessMove(indexedCells[0], indexedCells[1])
     }
-    // convertInputToMove(moveString)
-    // {
-    //     var list = moveString.split(" ");
-    //     var col1 = parseInt(list[0]);
-    //     var row1 = parseInt(list[1]);
-    //     var col2 = parseInt(list[2]);
-    //     var row2 = parseInt(list[3]);
-    //
-    //     row1--;
-    //     col1--;
-    //     row2--;
-    //     col2--;
-    //
-    //     var point1 = new Point(row1, col1);
-    //     var point2 = new Point(row2, col2);
-    //     return new ChessMove(point1, point2);
-    // }
 
     makeBoardChangeAfterMove(move)
     {

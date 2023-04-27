@@ -10,7 +10,7 @@ class Point
 
     isEqual(otherPoint)
     {
-        if (this.x == otherPoint.x && this.x == otherPoint.y) return true;
+        if (this.x == otherPoint.x && this.y == otherPoint.y) return true;
         return false;
     }
 }
