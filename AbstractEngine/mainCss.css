@@ -6,9 +6,9 @@ body {
     width: 640px;
     height: 640px;
     margin: 20px;
-    border: 10px solid #000;
+    border: 5px solid #000;
     border-radius: 4px;
-    background: #000;
+    background: #e5901051;
     box-shadow:  5px 5px 8px #bebdb6,
     -5px -5px 8px #ffffff;
 }

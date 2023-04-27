@@ -39,7 +39,7 @@ class Drawer
         divElement.style.background = cell.color
         divElement.style.width = cell.width + 'px'
         divElement.style.height = cell.height + 'px'
-        divElement.style.font = cell.font + 'px'
+        divElement.style.fontSize = cell.font + 'px'
         if (cell.shape == "circle")
             divElement.style.borderRadius = '50%';
     }

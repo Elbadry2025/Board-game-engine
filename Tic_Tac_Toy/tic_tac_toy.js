@@ -39,7 +39,15 @@ class Tic_Tac_ToyEngine extends Engine{
     constructor(){
         super(2,3,3);
         this.controller = new Tic_Tac_ToyController(this.board);
-        this.drawer = new Tic_Tac_ToyDrawer(this.board);
+        this.drawer = new Tic_Tac_ToyDrawer(this.board, this.boardCSS);
+    }
+    initializeCssBoard() {
+        let cell = new Cell("#5cb4f3b7", 100, 100, 70, undefined)
+        document.getElementById('board').style.width = 300 + 'px'
+        document.getElementById('board').style.height = 300 + 'px'
+        for (let i = 0; i < this.dimx; i++)
+            for (let j = 0; j < this.dimy; j++)
+                this.boardCSS[i][j] = cell
     }
     initializeBoardPieces(){
         for (var i = 0; i < 3; i++)
@@ -68,16 +76,6 @@ class Tic_Tac_ToyController extends Controller{
         return new Tic_Tac_ToyMove(indexedCells[0])
     }
 
-    // convertInputToMove(moveString){
-    //     var list = moveString.split(" ");
-    //     var col1 = parseInt(list[0]);
-    //     var row1 = parseInt(list[1]);
-    //     row1--;
-    //     col1--;
-    //     var point1 = new Point(row1, col1);
-    //     return point1;
-    // }
-
     makeBoardChangeAfterMove(move){
         let point = move.point1
         if(this.currentplayer == 1) this.board[point.x][point.y] = new XPiece();
@@ -85,8 +83,8 @@ class Tic_Tac_ToyController extends Controller{
     }
 }
 class Tic_Tac_ToyDrawer extends Drawer{
-    constructor(board){
-        super(board);
+    constructor(board, boardCSS){
+        super(board, boardCSS);
     }
 }
 var myEngine = new Tic_Tac_ToyEngine();

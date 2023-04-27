@@ -55,15 +55,6 @@ class QueensEngine extends Engine{
         this.drawer = new QueensDrawer(this.board, this.boardCSS);
     }
     initializeCssBoard(){
-        // console.log("from init css")
-        // for(let i=0;i<this.dimx;i++){
-        //         let colName = String.fromCharCode('a'.charCodeAt(0) + j)
-        //         let rowNum = this.dimy - i
-        //         let element = document.getElementById(colName + rowNum);
-        //         if((i+j)%2==0) element.className = "white"
-        //         else element.className = "black"
-        //     }
-        // }
         let cell1 = new Cell( "#e59110", undefined, undefined, undefined, 'circle')
         let cell2 = new Cell( "#ffcfb6", undefined, undefined, undefined, 'circle')
         for(let i= 0;i<this.dimx;i++) {
@@ -104,17 +95,6 @@ class QueensController extends Controller{
             return true;
         return false;
     }
-    // convertInputToMove(moveString){
-    //     var list = moveString.split(" ");
-    //     var col1 = parseInt(list[0]);
-    //     var row1 = parseInt(list[1]);
-    //
-    //     row1--;
-    //     col1--;
-    //
-    //     var point1 = new Point(row1, col1);
-    //     return point1;
-    // }
 
     makeBoardChangeAfterMove(move){
         let point = move.point1

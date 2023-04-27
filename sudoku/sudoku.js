@@ -228,40 +228,23 @@ class sudokuEngine extends Engine{
     constructor(){
         super(1,9,9);//,"#5cb4f3b7","#ffcfb6");
         this.controller = new sudokuController(this.board);
-        this.drawer = new sudokuDrawer(this.board);
+        this.drawer = new sudokuDrawer(this.board, this.boardCSS);
     }
-    initializeCss(){
-        console.log("from init css")
-        let elementBoard = document.getElementsByClassName('board');
-        elementBoard[0].style.width = 450;
-        elementBoard[0].style.height = 450;
-        
-        
-        
-        for(let i=0;i<this.dimx;i++){
-            for(let j = 0;j<this.dimy;j++){
-                let colName = String.fromCharCode('a'.charCodeAt(0) + j)
-                let rowNum = this.dimy - i
-                let element = document.getElementById(colName + rowNum);
-                if((i+j)%2==0) element.className = "black"
-                else element.className = "white"
+    initializeCssBoard(){
+        let cell1 = new Cell( "#5cb4f3b7", 50, 50, 40, undefined)
+        let cell2 = new Cell( "#ffcfb6", 50, 50, 40, undefined)
+        document.getElementById('board').style.width = 450 + 'px'
+        document.getElementById('board').style.height = 450 + 'px'
+        for(let i= 0;i<this.dimx;i++) {
+            for (let j = 0; j < this.dimy; j++) {
+                if ((i+j) % 2 == 0)
+                    this.boardCSS[i][j] = cell1
+                else
+                    this.boardCSS[i][j] = cell2
             }
         }
-
-        let elementWhite = document.getElementsByClassName('white');
-        let elementBlack = document.getElementsByClassName('black');
-        for(let i =0;i<elementWhite.length;i++){
-            elementWhite[i].style.background = "red";
-            elementWhite[i].style.width = 50+"px";
-            elementWhite[i].style.height = 50+"px";
-        }
-        for(let i =0;i<elementBlack.length;i++){
-            elementBlack[i].style.background = "#ffcfb6";
-            elementBlack[i].style.width = 50+"px";
-            elementBlack[i].style.height = 50+"px";
-        }
-
     }
+
     initializeBoardPieces(){
         let generatedBoard = newStartingBoard(50)[1]
         for (var i = 0; i < 9; i++)
@@ -303,8 +286,8 @@ class sudokuController extends Controller{
     }
 }
 class sudokuDrawer extends Drawer{
-    constructor(board){
-        super(board);
+    constructor(board, boardCSS){
+        super(board, boardCSS);
     }
 }
 var myEngine = new sudokuEngine();

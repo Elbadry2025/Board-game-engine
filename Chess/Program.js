@@ -321,9 +321,21 @@ class ChessEngine extends Engine
     {
         super(2, 8, 8);
         this.controller = new ChessController(this.board);
-        this.drawer = new ChessDrawer(this.board);
+        this.drawer = new ChessDrawer(this.board, this.boardCSS);
     }
-
+    initializeCssBoard(){
+        let cell1 = new Cell( '#e59110', undefined, undefined, undefined, undefined)
+        let cell2 = new Cell( '#ffcfb6', undefined, undefined, undefined, undefined)
+        for(let i= 0;i<this.dimx;i++) {
+            for (let j = 0; j < this.dimy; j++) {
+                if ((i+j) % 2 == 0)
+                    this.boardCSS[i][j] = cell1
+                else
+                    this.boardCSS[i][j] = cell2
+            }
+        }
+        console.log(this.boardCSS)
+    }
     initializeBoardPieces()
     {
         for (var i = 2; i < 6; i++)
@@ -415,9 +427,9 @@ class ChessController extends Controller
 
 class ChessDrawer extends Drawer
 {
-    constructor(board)
+    constructor(board, boardCSS)
     {
-        super(board);
+        super(board, boardCSS);
     }
 
 }

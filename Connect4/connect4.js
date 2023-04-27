@@ -40,7 +40,15 @@ class Connect4Engine extends Engine{
     constructor(){
         super(2,6,6);
         this.controller = new Connect4Controller(this.board);
-        this.drawer = new Connect4Drawer(this.board);
+        this.drawer = new Connect4Drawer(this.board, this.boardCSS);
+    }
+    initializeCssBoard(){
+        let cell = new Cell( "#ffffff", 100, 100, 90, "circle")
+        document.getElementById('board').style.width = 600 + 'px'
+        document.getElementById('board').style.height = 600 + 'px'
+        for(let i= 0;i<this.dimx;i++)
+            for (let j = 0; j < this.dimy; j++)
+                    this.boardCSS[i][j] = cell
     }
     initializeBoardPieces(){
         for (var i = 0; i < 6; i++)
@@ -76,8 +84,8 @@ class Connect4Controller extends Controller{
     }
 }
 class Connect4Drawer extends Drawer{
-    constructor(board){
-        super(board);
+    constructor(board, boardCSS){
+        super(board, boardCSS);
     }
 }
 var myEngine = new Connect4Engine();
