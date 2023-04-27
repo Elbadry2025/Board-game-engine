@@ -40,6 +40,7 @@ class Drawer
         divElement.style.width = cell.width + 'px'
         divElement.style.height = cell.height + 'px'
         divElement.style.fontSize = cell.font + 'px'
+        divElement.style.border = cell.border + 'px solid'
         if (cell.shape == "circle")
             divElement.style.borderRadius = '50%';
     }
@@ -59,14 +60,16 @@ class Cell {
     height
     font
     shape
+    border
 
-    constructor(color='#e59110', width=80, height=80, font=50, shape="square") {
+    constructor(color='#e59110', width=80, height=80, font=50, shape="square", border) {
         this.color = color
         this.width = width
         this.height = height
         this.font = font
         this.shape = shape
         this.className = 'cell'
+        this.border = border
     }
 
 }
