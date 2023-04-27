@@ -8,14 +8,14 @@ class Engine
     drawer;
     controller;
 
-    constructor(numOfPlayers, dimx, dimy)
+    constructor(numOfPlayers, dimx, dimy)//, color1, color2)
     {
         this.dimx = dimx;
         this.dimy = dimy;
         this.numOfPlayers = numOfPlayers;
         this.initializeBoardDimensions();
         this.initializeBoardPieces();
-        initializeHTML(dimx, dimy);
+        initializeHTML(dimx, dimy)//, color1, color2);
     }
 
     initializeBoardDimensions()

@@ -197,7 +197,7 @@ function checkSquare(board, point, val){
 }
 class numberPiece extends Piece{
     val;
-    changable; // bool val true if player can change it
+    changable;
     constructor(val, changable){
         super();
         this.val = val;
@@ -207,7 +207,7 @@ class numberPiece extends Piece{
         return this.changable;
     }
     getAsci(){
-        return this.val; // TODO get the ascii of val
+        return this.val;
     }
 }
 class EmptyPiece extends Piece{
@@ -226,7 +226,7 @@ class EmptyPiece extends Piece{
 
 class sudokuEngine extends Engine{
     constructor(){
-        super(1,9,9);
+        super(1,9,9);//,"#5cb4f3b7","#ffcfb6");
         this.controller = new sudokuController(this.board);
         this.drawer = new sudokuDrawer(this.board);
     }

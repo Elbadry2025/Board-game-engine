@@ -3,31 +3,33 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 .board{
-    width: 450px;
-    height: 450px;
+    width: 600px;
+    height: 600px;
     margin: auto;
     border: 5px solid #000;
     border-radius: 4px;
-    background: #eecd9d51;
+    background: rgb(55, 50, 150);
     box-shadow:  5px 5px 8px #bebdb6,
     -5px -5px 8px #ffffff;
 }
-.white{
+.white {
+    border-radius: 50%;
     float: left;
-    width: 50px;
-    height: 50px;
-    background: #5cb4f3b7;
-    font-size:40px;
+    width: 100px;
+    height: 100px;
+    background-color: #ffffff;
+    font-size:90px;
     text-align:center;
     display: table-cell;
     vertical-align:middle;
 }
-.black{
+.black {
+    border-radius: 50%;
     float: left;
-    width: 50px;
-    height: 50px;
-    background: #ffcfb6;
-    font-size:40px;
+    width: 100px;
+    height: 100px;
+    background-color: #ffffff;
+    font-size:90px;
     text-align:center;
     display: table-cell;
     vertical-align:middle;
