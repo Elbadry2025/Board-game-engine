@@ -52,19 +52,29 @@ class QueensEngine extends Engine{
     constructor(){
         super(1,8,8);
         this.controller = new QueensController(this.board);
-        this.drawer = new QueensDrawer(this.board);
+        this.drawer = new QueensDrawer(this.board, this.boardCSS);
     }
-    initializeCss(){
-        console.log("from init css")
-        for(let i=0;i<this.dimx;i++){
-            for(let j = 0;j<this.dimy;j++){
-                let colName = String.fromCharCode('a'.charCodeAt(0) + j)
-                let rowNum = this.dimy - i
-                let element = document.getElementById(colName + rowNum);
-                if((i+j)%2==0) element.className = "white"
-                else element.className = "black"
+    initializeCssBoard(){
+        // console.log("from init css")
+        // for(let i=0;i<this.dimx;i++){
+        //         let colName = String.fromCharCode('a'.charCodeAt(0) + j)
+        //         let rowNum = this.dimy - i
+        //         let element = document.getElementById(colName + rowNum);
+        //         if((i+j)%2==0) element.className = "white"
+        //         else element.className = "black"
+        //     }
+        // }
+        let cell1 = new Cell( "#e59110", undefined, undefined, undefined, 'circle')
+        let cell2 = new Cell( "#ffcfb6", undefined, undefined, undefined, 'circle')
+        for(let i= 0;i<this.dimx;i++) {
+            for (let j = 0; j < this.dimy; j++) {
+                if ((i+j) % 2 == 0)
+                    this.boardCSS[i][j] = cell1
+                else
+                    this.boardCSS[i][j] = cell2
             }
         }
+        console.log(this.boardCSS)
     }
     initializeBoardPieces(){
         for (var i = 0; i < 8; i++)
@@ -113,12 +123,14 @@ class QueensController extends Controller{
             this.board[point.x][point.y] = new QueenPiece();
         }
         else this.board[point.x][point.y] = new EmptyPiece();
-        
+
     }
 }
 class QueensDrawer extends Drawer{
-    constructor(board){
-        super(board);
+    constructor(board, boardCSS){
+        super(board, boardCSS);
     }
 }
+
+
 var myEngine = new QueensEngine();

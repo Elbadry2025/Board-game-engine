@@ -12,7 +12,7 @@ body {
     box-shadow:  5px 5px 8px #bebdb6,
     -5px -5px 8px #ffffff;
 }
-.black {
+.cell {
     float: left;
     width: 80px;
     height: 80px;
@@ -21,6 +21,15 @@ body {
     text-align:center;
     display: table-cell;
     vertical-align:middle;
+}
+.black {
+    float: left;
+    width: 80px;
+    height: 80px;
+    background-color: #e59110;
+    font-size:50px;
+    text-align:center;
+    display: table-cell;
 }
 .white {
     float: left;

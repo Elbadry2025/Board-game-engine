@@ -7,6 +7,7 @@ class Engine
     board;
     drawer;
     controller;
+    boardCSS;
 
     constructor(numOfPlayers, dimx, dimy)//, color1, color2)
     {
@@ -14,8 +15,10 @@ class Engine
         this.dimy = dimy;
         this.numOfPlayers = numOfPlayers;
         this.initializeBoardDimensions();
+        this.initializeCSSBoardDimensions();
         this.initializeHTML();
         this.initializeBoardPieces();
+        this.initializeCssBoard();
         // initializeHTML(dimx, dimy)//, color1, color2);
     }
     initializeHTML(){
@@ -27,10 +30,6 @@ class Engine
                 container.appendChild(element);
             }
         }
-        this.initializeCss();
-    }
-    initializeCss(){
-
     }
 
     initializeBoardDimensions()
@@ -39,9 +38,19 @@ class Engine
         for (var i = 0; i < this.dimx; i++)
             this.board[i] = new Array(this.dimy);
     }
+    initializeCSSBoardDimensions()
+    {
+        this.boardCSS = new Array(this.dimx);
+        for (var i = 0; i < this.dimx; i++)
+            this.boardCSS[i] = new Array(this.dimy);
+    }
 
     initializeBoardPieces()
     {
+    }
+
+    initializeCssBoard(){
+
     }
 
     takeInputAndMoveToControllerAndDraw()

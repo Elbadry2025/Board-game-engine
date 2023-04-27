@@ -8,11 +8,11 @@ body {
     margin: 20px;
     border: 10px solid #000;
     border-radius: 4px;
-    background: #e59110;
+    background: #000;
     box-shadow:  5px 5px 8px #bebdb6,
     -5px -5px 8px #ffffff;
 }
-.black {
+.cell {
     float: left;
     width: 80px;
     height: 80px;
@@ -21,16 +21,7 @@ body {
     text-align:center;
     display: table-cell;
     vertical-align:middle;
-}
-.white {
-    float: left;
-    width: 80px;
-    height: 80px;
-    background-color: #ffcfb6;
-    font-size:50px;
-    text-align:center;
-    display: table-cell;
-    vertical-align:middle;
+    border-radius: 0%;
 }
 .input{
     margin: auto;
