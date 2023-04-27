@@ -1,0 +1,80 @@
+body {
+    background: #e8e7de;
+    font-family: 'Montserrat', sans-serif;
+}
+.board {
+    width: 640px;
+    height: 640px;
+    margin: 20px;
+    border: 10px solid #000;
+    border-radius: 4px;
+    background: #e59110;
+    box-shadow:  5px 5px 8px #bebdb6,
+    -5px -5px 8px #ffffff;
+}
+.black {
+    float: left;
+    width: 80px;
+    height: 80px;
+    background-color: #e59110;
+    font-size:50px;
+    text-align:center;
+    display: table-cell;
+    vertical-align:middle;
+}
+.white {
+    float: left;
+    width: 80px;
+    height: 80px;
+    background-color: #ffcfb6;
+    font-size:50px;
+    text-align:center;
+    display: table-cell;
+    vertical-align:middle;
+}
+
+.nums {
+    float: left;
+    width: 80px;
+    height: 80px;
+    background-color: #ffcfb6;
+    font-size:50px;
+    text-align:center;
+    display: table-cell;
+    vertical-align:middle;
+}
+.empty {
+    display: flex;
+    justify-content: center;
+}
+
+/** {*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*}*/
+
+/*table {*/
+/*    border-spacing: 0;*/
+/*    border: 0;*/
+/*    margin: 20px 20px;*/
+/*}*/
+
+/*tr:not(:last-child) td:not(:first-child) {*/
+/*    border: 1px solid black;*/
+/*}*/
+
+/*.black {*/
+/*    width: 40px;*/
+/*    height: 40px;*/
+/*    background: black;*/
+/*}*/
+
+/*.white {*/
+/*    width: 40px;*/
+/*    height: 40px;*/
+/*    background: white;*/
+/*}*/
+
+/*.letter {*/
+/*    text-align: center;*/
+/*}*/
