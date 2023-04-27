@@ -32,6 +32,7 @@ class Controller
         cells.forEach(element => {
             let col = element.charAt(0).charCodeAt(0) - 'a'.charCodeAt(0)
             let row = this.board.length - parseInt(element.charAt(1));
+            console.log(col, row)
             indexedCells.push(new Point(row, col))
         })
         return this.createGameMoveFromInput(indexedCells)

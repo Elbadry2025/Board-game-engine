@@ -15,10 +15,11 @@ class Drawer
 
     draw()
     {
+        console.log(this.board)
         for (let i = 0; i < this.dimy; i++) {
             for (let j = 0; j < this.dimx; j++) {
                 let colName = String.fromCharCode('a'.charCodeAt(0) + j)
-                let rowNum = this.dimy - i
+                let rowNum = i+1
                 let temp = document.getElementById(colName + rowNum);
                 temp.textContent = ''
                 let node = document.createTextNode(this.board[this.dimy - i - 1][j].getAsci())

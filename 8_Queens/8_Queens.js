@@ -54,6 +54,18 @@ class QueensEngine extends Engine{
         this.controller = new QueensController(this.board);
         this.drawer = new QueensDrawer(this.board);
     }
+    initializeCss(){
+        console.log("from init css")
+        for(let i=0;i<this.dimx;i++){
+            for(let j = 0;j<this.dimy;j++){
+                let colName = String.fromCharCode('a'.charCodeAt(0) + j)
+                let rowNum = this.dimy - i
+                let element = document.getElementById(colName + rowNum);
+                if((i+j)%2==0) element.className = "white"
+                else element.className = "black"
+            }
+        }
+    }
     initializeBoardPieces(){
         for (var i = 0; i < 8; i++)
             for (var j = 0; j < 8; j++)
@@ -97,9 +109,11 @@ class QueensController extends Controller{
     makeBoardChangeAfterMove(move){
         let point = move.point1
         if(this.board[point.x][point.y] instanceof EmptyPiece){
+            console.log(point.x, point.y)
             this.board[point.x][point.y] = new QueenPiece();
         }
         else this.board[point.x][point.y] = new EmptyPiece();
+        
     }
 }
 class QueensDrawer extends Drawer{

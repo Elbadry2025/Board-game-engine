@@ -14,8 +14,23 @@ class Engine
         this.dimy = dimy;
         this.numOfPlayers = numOfPlayers;
         this.initializeBoardDimensions();
+        this.initializeHTML();
         this.initializeBoardPieces();
-        initializeHTML(dimx, dimy)//, color1, color2);
+        // initializeHTML(dimx, dimy)//, color1, color2);
+    }
+    initializeHTML(){
+        let container = document.getElementById('board');
+        for(let i=0;i<this.dimx;i++){
+            for(let j = 0;j<this.dimy;j++){
+                let element = document.createElement('div');
+                element.id = String.fromCharCode('a'.charCodeAt(0) + j) + (this.dimy - i);
+                container.appendChild(element);
+            }
+        }
+        this.initializeCss();
+    }
+    initializeCss(){
+
     }
 
     initializeBoardDimensions()
