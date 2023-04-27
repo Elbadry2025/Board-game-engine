@@ -1,4 +1,4 @@
-class Tic_Tac_ToyMove extends Move
+class Tic_Tac_ToeMove extends Move
 {
     constructor(point1)
     {
@@ -35,11 +35,11 @@ class EmptyPiece extends Piece{
     }
 }
 
-class Tic_Tac_ToyEngine extends Engine{
+class Tic_Tac_ToeEngine extends Engine{
     constructor(){
         super(2,3,3);
-        this.controller = new Tic_Tac_ToyController(this.board);
-        this.drawer = new Tic_Tac_ToyDrawer(this.board, this.boardCSS);
+        this.controller = new Tic_Tac_ToeController(this.board);
+        this.drawer = new Tic_Tac_ToeDrawer(this.board, this.boardCSS);
     }
     initializeCssBoard() {
         let cell = new Cell("#5cb4f3b7", 100, 100, 70, undefined)
@@ -56,7 +56,7 @@ class Tic_Tac_ToyEngine extends Engine{
     }
 }
 
-class Tic_Tac_ToyController extends Controller{
+class Tic_Tac_ToeController extends Controller{
     constructor(board){
         var numOfPlayers = 2;
         super(numOfPlayers, board);
@@ -73,7 +73,7 @@ class Tic_Tac_ToyController extends Controller{
         return false;
     }
     createGameMoveFromInput(indexedCells){
-        return new Tic_Tac_ToyMove(indexedCells[0])
+        return new Tic_Tac_ToeMove(indexedCells[0])
     }
 
     makeBoardChangeAfterMove(move){
@@ -82,9 +82,9 @@ class Tic_Tac_ToyController extends Controller{
         else this.board[point.x][point.y] = new OPiece();
     }
 }
-class Tic_Tac_ToyDrawer extends Drawer{
+class Tic_Tac_ToeDrawer extends Drawer{
     constructor(board, boardCSS){
         super(board, boardCSS);
     }
 }
-var myEngine = new Tic_Tac_ToyEngine();
+var myEngine = new Tic_Tac_ToeEngine();
