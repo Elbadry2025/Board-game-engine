@@ -6,11 +6,12 @@
     <link rel="stylesheet" href="../AbstractEngine/mainCss.css" type="text/css">
 </head>
 <body>
-<div id="board" class="board"></div>
+<div class="container">
+    <div id="board" class="board"></div>
 
-<input class="input" type="text" id="nameInput">
-<button class="input"  onclick="myEngine.takeInputAndMoveToControllerAndDraw()">Submit</button>
-
+    <input class="input" type="text" id="nameInput">
+    <button class="input"  onclick="myEngine.takeInputAndMoveToControllerAndDraw()">Submit</button>
+</div>
 <script src="../boardinit.js"></script>
 <script src="../AbstractEngine/Point.js"> </script>
 <script src="../AbstractEngine/Engine.js"> </script>
