@@ -16,6 +16,7 @@ def abstractEngine(dimx: Int, dimy: Int, numOfPlayers: Int, game: String,
                    drawer: Array[Array[(Colors,Pieces)]] => Unit) = {
   var state = (initBoard(dimx, dimy),0)
   chessDrawer(state(0))
+  drawChessBoardWithPieces(state(0))
   while(true) {
     var input = scala.io.StdIn.readLine()
     var currentState: (Boolean, Array[Array[(Colors,Pieces)]]) = controller(input, state)
@@ -35,7 +36,7 @@ def abstractEngine(dimx: Int, dimy: Int, numOfPlayers: Int, game: String,
 object Pieces extends Enumeration {
   type Pieces = Value
 
-  val Pown = Value("Pown")
+  val pawn = Value("pawn")
   val Knight = Value("Knight")
   val Bishop = Value("Bishop")
   val Rook = Value("Rook")
@@ -66,7 +67,7 @@ def initBoard(dimx: Int, dimy: Int):Array[Array[(Colors,Pieces)]]={
   state(0)(5) = (Colors.White,Pieces.Bishop)
   state(0)(6) = (Colors.White,Pieces.Knight)
   state(0)(7) = (Colors.White,Pieces.Rook)
-  (0 to 7).foreach(i=>state(1)(i)=(Colors.White,Pieces.Pown))
+  (0 to 7).foreach(i=>state(1)(i)=(Colors.White,Pieces.pawn))
 
   state(7)(0) = (Colors.Black,Pieces.Rook)
   state(7)(1) = (Colors.Black,Pieces.Knight)
@@ -76,7 +77,7 @@ def initBoard(dimx: Int, dimy: Int):Array[Array[(Colors,Pieces)]]={
   state(7)(5) = (Colors.Black,Pieces.Bishop)
   state(7)(6) = (Colors.Black,Pieces.Knight)
   state(7)(7) = (Colors.Black,Pieces.Rook)
-  (0 to 7).foreach(i=>state(6)(i)=(Colors.Black,Pieces.Pown))
+  (0 to 7).foreach(i=>state(6)(i)=(Colors.Black,Pieces.pawn))
 
   state
 }
@@ -101,12 +102,12 @@ def matchPieces(piece:Pieces, board:Array[Array[(Colors,Pieces)]],
   case Pieces.Rook => addMovesStraigt(moveFrom, board)
   case Pieces.Bishop => addMovesDiagonal(moveFrom, board)
   case Pieces.Knight => addKnightMoves(moveFrom, board)
-  case Pieces.Pown => addPawnMoves(moveFrom, board)
+  case Pieces.pawn => addPawnMoves(moveFrom, board)
   case Pieces.Empty => List.empty[(Int,Int)]
 }
 ///////////////////////////////////////////////////////////////
 def addMovesInConsecutiveCellsChess(inc1:Int, inc2:Int, range:Int, point:(Int,Int),
-                                    board:Array[Array[(Colors,Pieces)]]): List[(Int,Int)] = {
+                                    board:Array[Array[(Colors,Pieces)]],concatinate:Boolean): List[(Int,Int)] = {
 //  (1 to range)
 //    .takeWhile(i => checkValidPoint((point._1 + i * inc1, point._2 + i * inc2)))
 //    .takeWhile(i=>board(point._1 + i * inc1)(point._2 + i * inc2)._1 != board(point._1)(point._2)._1)
@@ -117,47 +118,38 @@ def addMovesInConsecutiveCellsChess(inc1:Int, inc2:Int, range:Int, point:(Int,In
     .takeWhile(i => checkValidPoint((point._1 + i * inc1, point._2 + i * inc2)))
     .takeWhile(i => board(point._1 + i * inc1)(point._2 + i * inc2)._1 != board(point._1)(point._2)._1)
     .span(i => board(point._1 + i * inc1)(point._2 + i * inc2)._1 == Colors.Empty)
+  if(!concatinate) return satisfied.map(i => (point._1 + i * inc1, point._2 + i * inc2)).toList
   (satisfied ++ unsatisfied.take(1)).map(i => (point._1 + i * inc1, point._2 + i * inc2)).toList
 }
 def addMovesStraigt(point:(Int,Int),board:Array[Array[(Colors,Pieces)]]):List[(Int,Int)] ={
-  val dims = List((1,0), (-1,0), (0,1), (0,-1));
-  dims.flatMap(pair => addMovesInConsecutiveCellsChess(pair(0), pair(1), 8,point,board))
+  List((1,0), (-1,0), (0,1), (0,-1))
+  .flatMap(pair => addMovesInConsecutiveCellsChess(pair(0), pair(1), 8,point,board,true))
 }
 
 def addMovesDiagonal(point:(Int,Int),board:Array[Array[(Colors,Pieces)]]):List[(Int,Int)] ={
-  val dims = List((1,1),(1,-1),(-1,1),(-1,-1))
-  dims.flatMap(pair => addMovesInConsecutiveCellsChess(pair(0), pair(1), 8,point,board))
+  List((1,1),(1,-1),(-1,1),(-1,-1))
+  .flatMap(pair => addMovesInConsecutiveCellsChess(pair(0), pair(1), 8,point,board,true))
 }
 
 def addKingMoves(point:(Int,Int),board:Array[Array[(Colors,Pieces)]]):List[(Int,Int)] ={
-  val dims = List((1,-1),(1,0),(1,1),(-1,-1),(-1,0),(-1,1),(0,-1),(0,1))
-  dims.flatMap(pair => addMovesInConsecutiveCellsChess(pair(0), pair(1), 1,point,board))
+  List((1,-1),(1,0),(1,1),(-1,-1),(-1,0),(-1,1),(0,-1),(0,1))
+  .flatMap(pair => addMovesInConsecutiveCellsChess(pair(0), pair(1), 1,point,board,true))
 }
 
 def addKnightMoves(point:(Int,Int),board:Array[Array[(Colors,Pieces)]]):List[(Int,Int)] ={
-  val dims = List((1,2),(1,-2),(-1,2),(-1,-2),(2,1),(2,-1),(-2,1),(-2,-1))
-  dims.flatMap(pair => addMovesInConsecutiveCellsChess(pair(0), pair(1), 1,point,board))
+  List((1,2),(1,-2),(-1,2),(-1,-2),(2,1),(2,-1),(-2,1),(-2,-1))
+  .flatMap(pair => addMovesInConsecutiveCellsChess(pair(0), pair(1), 1,point,board,true))
 }
 
-def addMovesInConsecutiveCellsPawn(inc1:Int, inc2:Int, range:Int, point:(Int,Int),
-                                    board:Array[Array[(Colors,Pieces)]]): List[(Int,Int)] = {
-    var res = (1 to range)
-      .takeWhile(i => checkValidPoint((point._1 + i * inc1, point._2 + i * inc2)))
-      .takeWhile(i=>board(point._1 + i * inc1)(point._2 + i * inc2)._1 == Colors.Empty)
-      .map(i => (point._1 + i * inc1, point._2 + i * inc2)).toList
-  println(res)
-  res
-}
 ///////////////////////////////////////////////////////////////////////////////////////
-//def addMoveInConsecutiveCellsPawn(inc1:Int, inc2:Int, range:Int, point:(Int,Int),
-//                                   board:Array[Array[(Colors,Pieces)]]): List[(Int,Int)] = {
-//  var res = (1 to range)
-//    .takeWhile(i => checkValidPoint((point._1 + i * inc1, point._2 + i * inc2)))
-//    .takeWhile(i=>board(point._1 + i * inc1)(point._2 + i * inc2)._1 == Colors.Empty)
-//    .map(i => (point._1 + i * inc1, point._2 + i * inc2)).toList
-//  println(res)
-//  res
-//}
+
+def addPawnMoves (range:Int, point:(Int,Int), board:Array[Array[(Colors,Pieces)]]): List[(Int,Int)] = {
+  (0 to 2).flatMap(i => if(i==0) addMovesInConsecutiveCellsChess((board(point._1)(point._2)._1
+    match {case Colors.White => 1 case Colors.Black => -1}),
+    0, range,point, board, false) else addMovesPawnDiagonal(point, board)).toList
+
+}
+// this is a repeated function because the attacks squares must be not empty
 def addAttackInConsecutiveCellsPawn(inc1:Int, inc2:Int, range:Int, point:(Int,Int),
                                     board:Array[Array[(Colors,Pieces)]]): List[(Int,Int)] = {
   var res = (1 to range)
@@ -170,15 +162,14 @@ def addAttackInConsecutiveCellsPawn(inc1:Int, inc2:Int, range:Int, point:(Int,In
 }
 
 def addMovesPawnDiagonal(point:(Int,Int),board:Array[Array[(Colors,Pieces)]]):List[(Int,Int)] ={
-  val dims = List((1,1),(1,-1))
-  dims.flatMap(pair => addAttackInConsecutiveCellsPawn(pair(0), pair(1), 1,point,board))
+  List((1,1),(1,-1)).flatMap(pair => addAttackInConsecutiveCellsPawn(pair(0), pair(1), 1,point,board))
 }
 def addPawnMoves(point:(Int,Int),board:Array[Array[(Colors,Pieces)]]):List[(Int,Int)] ={
   (point(0),board(point(0))(point(1))(0)) match
-    case (1,Colors.White) => addMovesInConsecutiveCellsPawn(1, 0, 2,point, board) ++ addMovesPawnDiagonal(point, board)
-    case (6,Colors.Black) => addMovesInConsecutiveCellsPawn(-1, 0, 2,point, board) ++ addMovesPawnDiagonal(point, board)
-    case (_,Colors.White) => addMovesInConsecutiveCellsPawn(1, 0, 1,point, board) ++ addMovesPawnDiagonal(point, board)
-    case (_,Colors.Black) => addMovesInConsecutiveCellsPawn(-1, 0, 1,point, board) ++ addMovesPawnDiagonal(point, board)
+    case (1,Colors.White) => addPawnMoves(2, point, board)
+    case (6,Colors.Black) => addPawnMoves(2, point, board)
+    case (_,Colors.White) => addPawnMoves(1, point, board)
+    case (_,Colors.Black) => addPawnMoves(1, point, board)
 }
 
 
@@ -186,14 +177,10 @@ def checkValidPoint(point:(Int,Int)):Boolean ={
   !(point(0).min(point(1)) < 0 || point(0).max(point(1)) >= 8)
 }
 ///////////////////////////////////////////////////////////////
-
-
-
 def validate(board:Array[Array[(Colors,Pieces)]], moveTo:(Int,Int), moveFrom:(Int,Int), turn:Int): Boolean ={
   if(board(moveFrom(0))(moveFrom(1))(0) != Colors.apply(turn)) return false
   getValidMove(board, moveFrom).contains(moveTo)
 }
-
 
 def applyMove(board:Array[Array[(Colors,Pieces)]], moveTo:(Int,Int), moveFrom:(Int,Int)): Unit ={
   board(moveTo(0))(moveTo(1)) = board(moveFrom(0))(moveFrom(1))
@@ -218,13 +205,13 @@ def getAscii(i: Int, j: Int, board: Array[Array[(Colors,Pieces)]]):String = boar
   case (Colors.White, Pieces.Bishop) => Console.RED + " ♝ " + Console.RESET
   case (Colors.White, Pieces.Queen) => Console.RED + " ♛ " + Console.RESET
   case (Colors.White, Pieces.King) => Console.RED + " ♚ " + Console.RESET
-  case (Colors.White, Pieces.Pown) => Console.RED + " ♟ " + Console.RESET
+  case (Colors.White, Pieces.pawn) => Console.RED + " ♟ " + Console.RESET
   case (Colors.Black, Pieces.Rook) => Console.WHITE + " ♖ " + Console.RESET
   case (Colors.Black, Pieces.Knight) => Console.WHITE + " ♘ " + Console.RESET
   case (Colors.Black, Pieces.Bishop) => Console.WHITE + " ♗ " + Console.RESET
   case (Colors.Black, Pieces.Queen) => Console.WHITE + " ♕ " + Console.RESET
   case (Colors.Black, Pieces.King) => Console.WHITE + " ♔ " + Console.RESET
-  case (Colors.Black, Pieces.Pown) => Console.BLUE + " ♙ " + Console.RESET
+  case (Colors.Black, Pieces.pawn) => Console.BLUE + " ♙ " + Console.RESET
   case _ => "    "
 }
 
@@ -300,12 +287,12 @@ def getPath(i: Int, j: Int, board: Array[Array[(Colors,Pieces)]]):Image = board(
   case (Colors.White, Pieces.Bishop) => getPieceImage("bishop",true)
   case (Colors.White, Pieces.Queen) => getPieceImage("queen",true)
   case (Colors.White, Pieces.King) => getPieceImage("king",true)
-  case (Colors.White, Pieces.Pown) => getPieceImage("pawn",true)
+  case (Colors.White, Pieces.pawn) => getPieceImage("pawn",true)
   case (Colors.Black, Pieces.Rook) => getPieceImage("rook",false)
   case (Colors.Black, Pieces.Knight) => getPieceImage("knight",false)
   case (Colors.Black, Pieces.Bishop) => getPieceImage("bishop",false)
   case (Colors.Black, Pieces.Queen) => getPieceImage("queen",false)
   case (Colors.Black, Pieces.King) => getPieceImage("king",false)
-  case (Colors.Black, Pieces.Pown) => getPieceImage("pawn",false)
+  case (Colors.Black, Pieces.pawn) => getPieceImage("pawn",false)
   case _ => null
 }
