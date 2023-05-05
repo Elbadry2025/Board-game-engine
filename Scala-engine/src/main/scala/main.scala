@@ -1,82 +1,10 @@
-import Colors.Colors
+import Colors.{Colors, White}
 import Pieces.{Empty, Pieces}
 
 import javax.swing.ImageIcon
 import scala.swing.{Component, MainFrame, SimpleSwingApplication}
+import scala.util.control.Breaks.break
 
-
-// for GUI
-import java.awt.Color
-import java.awt.Graphics2D
-import java.awt.Image
-import java.awt.RenderingHints
-import java.awt.Toolkit
-import java.awt.image.BufferedImage
-import java.io.File
-import javax.imageio.ImageIO
-import scala.swing._
-
-
-
-object ChessBoard extends SimpleSwingApplication {
-  def top = new MainFrame {
-    title = "Chess Board"
-
-    val darkSquare = new Color(209, 139, 71)
-    val lightSquare = new Color(255, 206, 158)
-
-    val letters = Array("a", "b", "c", "d", "e", "f", "g", "h")
-    val numbers = Array("1", "2", "3", "4", "5", "6", "7", "8")
-    val pieces = Map(
-      'R' -> "rook",
-      'N' -> "knight",
-      'B' -> "bishop",
-      'Q' -> "queen",
-      'K' -> "king",
-      'P' -> "pawn"
-    )
-
-    val board = new GridPanel(8, 8) {
-      preferredSize = new Dimension(640, 640)
-      override def paintComponent(g: Graphics2D) = {
-        super.paintComponent(g)
-        val pieceSize = 64
-        for (i <- 0 until 8) {
-          for (j <- 0 until 8) {
-            val squareColor = if ((i + j) % 2 == 0) lightSquare else darkSquare
-            g.setColor(squareColor)
-            g.fillRect(j * pieceSize, i * pieceSize, pieceSize, pieceSize)
-            if (i == 0 || i == 7) {
-              val img = getPieceImage(pieces('R'), i == 0)
-              g.drawImage(img, j * pieceSize, i * pieceSize, pieceSize, pieceSize, null)
-            }
-            if (i == 1 || i == 6) {
-              val img = getPieceImage(pieces('P'), i == 1)
-              g.drawImage(img, j * pieceSize, i * pieceSize, pieceSize, pieceSize, null)
-            }
-          }
-        }
-      }
-    }
-
-    def getPieceImage(pieceName: String, isWhite: Boolean): Image = {
-      val colorString = if (isWhite) "white" else "black"
-      println(pieceName)
-      val img = ImageIO.read(new File(s"src/main/scala/pieces/$colorString/$pieceName.png"))
-      val resizedImg = img.getScaledInstance(64, 64, Image.SCALE_SMOOTH)
-      val bImg = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB)
-      val g2d = bImg.createGraphics()
-      g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-      g2d.drawImage(resizedImg, 0, 0, null)
-      g2d.dispose()
-      Toolkit.getDefaultToolkit().createImage(bImg.getSource())
-    }
-
-    contents = board
-    pack()
-  }
-}
-/////////////////////////////////////////////////////////////////
 @main
 def main(): Unit = {
   println("Hello world!")
@@ -96,6 +24,7 @@ def abstractEngine(dimx: Int, dimy: Int, numOfPlayers: Int, game: String,
       var playerturn = state(1)
       println(s"the player turn is $playerturn")
       chessDrawer(state(0))
+//      drawChessBoardWithPieces(state(0))
     } else
       println("Invalid move!")
   }
@@ -147,7 +76,7 @@ def initBoard(dimx: Int, dimy: Int):Array[Array[(Colors,Pieces)]]={
   state(7)(6) = (Colors.Black,Pieces.Knight)
   state(7)(7) = (Colors.Black,Pieces.Rook)
 
-  return state
+  state
 }
 
 def chessController(state:(String,(Array[Array[(Colors,Pieces)]], Int))) : (Boolean, Array[Array[(Colors,Pieces)]]) = {
@@ -157,64 +86,29 @@ def chessController(state:(String,(Array[Array[(Colors,Pieces)]], Int))) : (Bool
   var validatingMove = validate(state(1)(0), moveTo, moveFrom, state(1)(1))
 
   if(validatingMove) applyMove(state(1)(0), moveTo, moveFrom)
-  return (validatingMove,state(1)(0))
+  (validatingMove,state(1)(0))
 }
 
-/*
-if we could define function that takes 2 parameters and return bool express if that piece can move form this square
-to that square we are done
-so we can fill the grid with (function, int) as the function expresses how the piece in this square can move and the
-bool expresses the color of that piece
-
-the colors are
-0 empty
-1 white
-2 black
-
-to check the validation
-- the destination square is empty or with different color (!= source color)
-- the input and output in the same signature of move the diagonal or vertical or L
-- no pieces in the path
-
-
-*/
 def getValidMove(board:Array[Array[(Colors,Pieces)]], moveFrom:(Int,Int)):List[(Int,Int)]={
-  var validMoves = matchPieces(board(moveFrom(0))(moveFrom(1)),board,moveFrom)
-  return validMoves
+  matchPieces(board(moveFrom(0))(moveFrom(1))(1),board,moveFrom)
 }
-def matchPieces(piece:(Colors,Pieces),board:Array[Array[(Colors,Pieces)]],
+def matchPieces(piece:Pieces,board:Array[Array[(Colors,Pieces)]],
                 moveFrom:(Int,Int)):List[(Int,Int)] = piece match{
-  case (_,Pieces.Queen) => return addMovesStraigt(moveFrom,board)++addMovesDiagonal(moveFrom,board)
-  case (_,Pieces.King) => return addKingMoves(moveFrom,board)
-  case (_,Pieces.Rook) => return addMovesStraigt(moveFrom,board)
-  case (_,Pieces.Bishop) => return addMovesDiagonal(moveFrom,board)
-  case (_,Pieces.Knight) => return addKnightMoves(moveFrom,board)
-  case (_,Pieces.Pown) => return List.empty[(Int,Int)].appended((1,1))
-  case (_,Pieces.Empty) => return List.empty[(Int,Int)]
+  case Pieces.Queen => return addMovesStraigt(moveFrom,board)++addMovesDiagonal(moveFrom,board)
+  case Pieces.King => return addKingMoves(moveFrom,board)
+  case Pieces.Rook => return addMovesStraigt(moveFrom,board)
+  case Pieces.Bishop => return addMovesDiagonal(moveFrom,board)
+  case Pieces.Knight => return addKnightMoves(moveFrom,board)
+  case Pieces.Pown => return List.empty[(Int,Int)].appended((1,1))
+  case Pieces.Empty => return List.empty[(Int,Int)]
 }
 ///////////////////////////////////////////////////////////////
 def addMovesInConsecutiveCellsChess(inc1:Int, inc2:Int, range:Int, point:(Int,Int),
-                                    board:Array[Array[(Colors,Pieces)]]): List[(Int,Int)] ={
-  var valid = List[(Int,Int)]()
-  var i = 1
-
-  while (i < range){
-    var x2 = point(0) + i * inc1
-    var y2 = point(1) + i * inc2
-    if (!checkValidPoint((x2, y2))) return valid;
-    if (board(x2)(y2)(0) != Colors.Empty)
-    {
-      if (board(x2)(y2)(0) != board(point(0))(point(1))(0)){
-        valid = valid.appended((x2, y2))
-      }
-      return valid
-    }
-    valid = valid.appended((x2, y2))
-    i = i+1
-  }
-  return valid
+                                    board:Array[Array[(Colors,Pieces)]]): List[(Int,Int)] = {
+  (1 to range).filter(i => checkValidPoint((point._1 + i * inc1, point._2 + i * inc2)) &&
+    board(point._1 + i * inc1)(point._2 + i * inc2)._1 != board(point._1)(point._2)._1)
+    .map(i => (point._1 + i * inc1, point._2 + i * inc2)).toList
 }
-
 def addMovesStraigt(point:(Int,Int),board:Array[Array[(Colors,Pieces)]]):List[(Int,Int)] ={
   val dims = List((1,0), (-1,0), (0,1), (0,-1));
   dims.flatMap(pair => addMovesInConsecutiveCellsChess(pair(0), pair(1), 8,point,board))
@@ -243,8 +137,7 @@ def checkValidPoint(point:(Int,Int)):Boolean ={
 
 def validate(board:Array[Array[(Colors,Pieces)]], moveTo:(Int,Int), moveFrom:(Int,Int), turn:Int): Boolean ={
   if(board(moveFrom(0))(moveFrom(1))(0) != Colors.apply(turn)) return false
-  var validMoves = getValidMove(board, moveFrom)
-  validMoves.contains(moveTo)
+  getValidMove(board, moveFrom).contains(moveTo)
 }
 
 
@@ -254,22 +147,18 @@ def applyMove(board:Array[Array[(Colors,Pieces)]], moveTo:(Int,Int), moveFrom:(I
 }
 
 def chessDrawer(board: Array[Array[(Colors,Pieces)]]) : Unit = {
-  val size = 8
-  println("  " + (0 until size).mkString("   "))
-  for (i <- 0 until size) {
-    for (j <- 0 until size) {
-        (i + j) % 2 match {
-        case 0 => print(Console.CYAN_B + getAscii(i,j,board) + Console.RESET)
-        case 1 => print(Console.BLACK_B + getAscii(i,j,board) + Console.RESET)
-      }
+  println("  " + (0 until 8).mkString("   "))
+  (0 until 8).foreach { row =>
+    (0 until 8).foreach { col => (row+col)%2 match
+      case 0 => print(Console.CYAN_B + getAscii(row,col,board) + Console.RESET)
+      case 1 => print(Console.BLACK_B + getAscii(row,col,board) + Console.RESET)
     }
-      println("  " + i)
+    println("  " + row)
   }
-  println()
+  println
 }
 
 def getAscii(i: Int, j: Int, board: Array[Array[(Colors,Pieces)]]):String = board(i)(j) match{
-//  case (Colors.White, Pieces.Bishop) return ""
   case (Colors.White, Pieces.Rook) =>return Console.RED + " ♜ " + Console.RESET
   case (Colors.White, Pieces.Knight) =>return Console.RED + " ♞ " + Console.RESET
   case (Colors.White, Pieces.Bishop) =>return Console.RED + " ♝ " + Console.RESET
@@ -285,3 +174,86 @@ def getAscii(i: Int, j: Int, board: Array[Array[(Colors,Pieces)]]):String = boar
   //        case (6, _) => Console.BLUE + "♙" + Console.RESET
 }
 
+/*
+import scala.swing._
+import java.awt.{Color, Graphics2D, Image, RenderingHints, Toolkit}
+import javax.imageio.ImageIO
+import java.io.File
+import java.awt.image.BufferedImage
+
+def getPieceImage(pieceName: String, isWhite: Boolean): Image = {
+  val colorString = if (isWhite) "white" else "black"
+  println(pieceName)
+  val img = ImageIO.read(new File(s"src/main/scala/pieces/$colorString/$pieceName.png"))
+  val resizedImg = img.getScaledInstance(64, 64, Image.SCALE_SMOOTH)
+  val bImg = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB)
+  val g2d = bImg.createGraphics()
+  g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+  g2d.drawImage(resizedImg, 0, 0, null)
+  g2d.dispose()
+  Toolkit.getDefaultToolkit().createImage(bImg.getSource())
+}
+def drawChessBoardWithPieces(board: Array[Array[(Colors,Pieces)]]): Unit = {
+  val darkSquare = new Color(209, 139, 71)
+  val lightSquare = new Color(255, 206, 158)
+
+  val letters = Array("a", "b", "c", "d", "e", "f", "g", "h")
+  val numbers = Array("1", "2", "3", "4", "5", "6", "7", "8")
+  val pieces = Map(
+    'R' -> "rook",
+    'N' -> "knight",
+    'B' -> "bishop",
+    'Q' -> "queen",
+    'K' -> "king",
+    'P' -> "pawn"
+  )
+
+  val boardGUI = new GridPanel(8, 8) {
+    preferredSize = new Dimension(640, 640)
+    override def paintComponent(g: Graphics2D) = {
+      super.paintComponent(g)
+      val pieceSize = 64
+      for (i <- 0 until 8) {
+        for (j <- 0 until 8) {
+          val squareColor = if ((i + j) % 2 == 0) lightSquare else darkSquare
+          g.setColor(squareColor)
+          g.fillRect(j * pieceSize, i * pieceSize, pieceSize, pieceSize)
+          for(i<-0 to 7){
+            for(j<-0 to 7){
+              if(board(i)(j)(0)!=Colors.Empty){
+                g.drawImage(getPath(i, j, board), j * pieceSize, i * pieceSize, pieceSize, pieceSize, null)
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+  val frame = new MainFrame {
+    title = "Chess Board"
+    contents = boardGUI
+    pack()
+    centerOnScreen()
+    open()
+    repaint()
+  }
+}
+def getPath(i: Int, j: Int, board: Array[Array[(Colors,Pieces)]]):Image = board(i)(j) match{
+  //  case (Colors.White, Pieces.Bishop) return
+  case (Colors.White, Pieces.Rook) =>return getPieceImage("rook",true)
+  case (Colors.White, Pieces.Knight) =>return getPieceImage("knight",true)
+  case (Colors.White, Pieces.Bishop) =>return getPieceImage("bishop",true)
+  case (Colors.White, Pieces.Queen) =>return getPieceImage("queen",true)
+  case (Colors.White, Pieces.King) =>return getPieceImage("king",true)
+  case (Colors.Black, Pieces.Rook) =>return getPieceImage("rook",false)
+  case (Colors.Black, Pieces.Knight) =>return getPieceImage("knight",false)
+  case (Colors.Black, Pieces.Bishop) =>return getPieceImage("bishop",false)
+  case (Colors.Black, Pieces.Queen) =>return getPieceImage("queen",false)
+  case (Colors.Black, Pieces.King) =>return getPieceImage("king",false)
+  case _ => null
+  //        case (1, _) => Console.RED + "♟" + Console.RESET
+  //        case (6, _) => Console.BLUE + "♙" + Console.RESET
+}
+*/
