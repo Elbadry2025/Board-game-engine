@@ -22,8 +22,8 @@ def abstractEngine(dimx: Int, dimy: Int, numOfPlayers: Int, game: String,
     var currentState: (Boolean, Array[Array[(Colors,Pieces)]]) = controller(input, state)
     if(currentState(0) == true) {
       state = (currentState(1), (state(1)+1) % numOfPlayers)
-      var playerturn = state(1)
-      println(s"the player turn is $playerturn")
+      var playerTurn = state(1)
+      println(s"the player turn is $playerTurn")
       chessDrawer(state(0))
       drawChessBoardWithPieces(state(0))
     } else
@@ -31,11 +31,8 @@ def abstractEngine(dimx: Int, dimy: Int, numOfPlayers: Int, game: String,
   }
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////
 object Pieces extends Enumeration {
   type Pieces = Value
-
   val pawn = Value("pawn")
   val Knight = Value("Knight")
   val Bishop = Value("Bishop")
@@ -46,7 +43,6 @@ object Pieces extends Enumeration {
 }
 object Colors extends Enumeration {
   type Colors = Value
-
   val White = Value("White")
   val Black = Value("Black")
   val Empty = Value("Empty")
@@ -83,10 +79,10 @@ def initBoard(dimx: Int, dimy: Int):Array[Array[(Colors,Pieces)]]={
 }
 
 def chessController(state:(String,(Array[Array[(Colors,Pieces)]], Int))) : (Boolean, Array[Array[(Colors,Pieces)]]) = {
-  var moveFrom = (state(0).take(1).toInt, state(0).drop(1).take(1).toInt)
-  var moveTo = (state(0).drop(3).take(1).toInt, state(0).drop(4).take(1).toInt)
-
-  var validatingMove = validate(state(1)(0), moveTo, moveFrom, state(1)(1))
+  val move = changeLettersToIndex(state(0))
+  val moveFrom = (move(0)(1),move(0)(0))
+  val moveTo = (move(1)(1),move(1)(0))
+  val validatingMove = validate(state(1)(0), moveTo, moveFrom, state(1)(1))
 
   if(validatingMove) applyMove(state(1)(0), moveTo, moveFrom)
   (validatingMove,state(1)(0))
@@ -105,7 +101,6 @@ def matchPieces(piece:Pieces, board:Array[Array[(Colors,Pieces)]],
   case Pieces.pawn => addPawnMoves(moveFrom, board)
   case Pieces.Empty => List.empty[(Int,Int)]
 }
-///////////////////////////////////////////////////////////////
 def addMovesInConsecutiveCellsChess(inc1:Int, inc2:Int, range:Int, point:(Int,Int),
                                     board:Array[Array[(Colors,Pieces)]],concatinate:Boolean): List[(Int,Int)] = {
 //  (1 to range)
@@ -141,8 +136,6 @@ def addKnightMoves(point:(Int,Int),board:Array[Array[(Colors,Pieces)]]):List[(In
   .flatMap(pair => addMovesInConsecutiveCellsChess(pair(0), pair(1), 1,point,board,true))
 }
 
-///////////////////////////////////////////////////////////////////////////////////////
-
 def addPawnMoves (range:Int, point:(Int,Int), board:Array[Array[(Colors,Pieces)]]): List[(Int,Int)] = {
   (0 to 2).flatMap(i => if(i==0) addMovesInConsecutiveCellsChess((board(point._1)(point._2)._1
     match {case Colors.White => 1 case Colors.Black => -1}),
@@ -176,7 +169,7 @@ def addPawnMoves(point:(Int,Int),board:Array[Array[(Colors,Pieces)]]):List[(Int,
 def checkValidPoint(point:(Int,Int)):Boolean ={
   !(point(0).min(point(1)) < 0 || point(0).max(point(1)) >= 8)
 }
-///////////////////////////////////////////////////////////////
+
 def validate(board:Array[Array[(Colors,Pieces)]], moveTo:(Int,Int), moveFrom:(Int,Int), turn:Int): Boolean ={
   if(board(moveFrom(0))(moveFrom(1))(0) != Colors.apply(turn)) return false
   getValidMove(board, moveFrom).contains(moveTo)
@@ -281,7 +274,6 @@ def drawChessBoardWithPieces(board: Array[Array[(Colors,Pieces)]]): Unit = {
   }
 }
 def getPath(i: Int, j: Int, board: Array[Array[(Colors,Pieces)]]):Image = board(i)(j) match{
-  //  case (Colors.White, Pieces.Bishop) return
   case (Colors.White, Pieces.Rook) => getPieceImage("rook",true)
   case (Colors.White, Pieces.Knight) => getPieceImage("knight",true)
   case (Colors.White, Pieces.Bishop) => getPieceImage("bishop",true)
@@ -296,3 +288,5 @@ def getPath(i: Int, j: Int, board: Array[Array[(Colors,Pieces)]]):Image = board(
   case (Colors.Black, Pieces.pawn) => getPieceImage("pawn",false)
   case _ => null
 }
+def changeLettersToIndex =(move:String) => move.split(' ').map(arr => arr.map(c=>
+  if(c.isLetter)c.toInt - 'a'.toInt else c.toInt -'0'.toInt))
