@@ -1,9 +1,13 @@
 //import Chess._
-import javax.swing.{ImageIcon, SwingUtilities}
+import Sudoku.GameEngine._
+
+import javax.swing.{ImageIcon, JFrame, SwingUtilities}
 //import scala.swing.{Component, MainFrame, SimpleSwingApplication}
 import scala.swing._
 import scala.util.control.Breaks.break
 import scala.swing.event.ButtonClicked
+import Connect4._
+import Sudoku._
 
 @main
 def main(): Unit = {
@@ -45,8 +49,10 @@ def createMainMenu(): Unit = {
   }
 
   def startGame(game: String): Unit = {
-    // TODO: Implement game launching logic based on the selected game
-    println(s"Starting $game...")
+    println(game)
+    game match
+      case "sudoku" => abstractEngine(9, 9, 1, "sudoku")
+      case "connect 4" => abstractEngine(6, 7, 2, "connect4")
   }
 
   SwingUtilities.invokeLater(() => {
@@ -60,7 +66,41 @@ def createMainMenu(): Unit = {
 
 
 
+  def abstractEngine(dimx: Int, dimy: Int, numOfPlayers: Int, game: String) =
+  {
+    val frame = new JFrame()
+    var state = (Array.ofDim[Int](dimx, dimy), 0);
+    game match
+      case "connect4" =>
+        Connect4_drawer(state(0))
+        drawBoardGUI_Connect4(state(0), frame)
+      case "sudoku" =>
+        Sudokudrawer(state(0))
+        drawBoardGUI_Sudoku(state(0),frame)
 
+
+    while(true) {
+      val input = scala.io.StdIn.readLine()
+      var currentState: (Boolean, Array[Array[Int]]) = null
+      game match
+        case "connect4" =>
+          currentState = Connect4_controller(game, input, state)
+        case "sudoku" =>
+          currentState = Sudokucontroller(game, input, state)
+
+      if(currentState(0) == true) {
+        state = (currentState(1), (state(1)+1) % numOfPlayers)
+        game match
+          case "connect4" =>
+            Connect4_drawer(state(0))
+            drawBoardGUI_Connect4(state(0), frame)
+          case "sudoku" =>
+            Sudokudrawer(state(0))
+            drawBoardGUI_Sudoku(state(0), frame)
+      } else
+        println("Invalid move!")
+    }
+  }
 
 
 
