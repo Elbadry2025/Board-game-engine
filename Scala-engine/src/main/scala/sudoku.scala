@@ -58,22 +58,23 @@ object GameEngine {
     }
   }
 
-  def fillRandom(array: Array[Array[Int]]):  Array[Array[Int]] = {
+  def fillRandom():  Array[Array[Int]] = {
+    val board = Array.ofDim[Int](9, 9)
     val random = new Random()
     var count = 0
     while (count < 17) {
       val row = random.nextInt(9)
       val col = random.nextInt(9)
-      if (array(row)(col) == 0) {
+      if (board(row)(col) == 0) {
         var value = random.nextInt(9) + 1;
-        while(! isValidMoveSudoku(array, row, col, value))
+        while(! isValidMoveSudoku(board, row, col, value))
           value = random.nextInt(9) + 1
       }
       count += 1
     }
-    array
+    board
   }
-  def Sudokucontroller(game: String, move: String, state: (Array[Array[Int]], Int)): (Boolean, Array[Array[Int]]) = {
+  def Sudokucontroller(move: String, state: (Array[Array[Int]], Int)): (Boolean, Array[Array[Int]]) = {
 
     val indexedMove = move.split(" ").map(_.toInt)
     indexedMove match {
@@ -119,7 +120,8 @@ object GameEngine {
 
 
   ///////////
-  def drawBoardGUI_Sudoku(board: Array[Array[Int]], frame: JFrame): Unit = {
+  def drawBoardGUI_Sudoku(board: Array[Array[Int]]): Unit = {
+    val frame = new JFrame
     val panel = new JPanel() {
       override def paintComponent(g: Graphics): Unit = {
         super.paintComponent(g)

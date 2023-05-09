@@ -15,7 +15,7 @@ def Connect4_drawer(state: Array[Array[Int]]): Unit = {
   println()
 }
 
-def Connect4_controller(game: String, move: String, state: (Array[Array[Int]], Int)): (Boolean, Array[Array[Int]]) = {
+def Connect4_controller(move: String, state: (Array[Array[Int]], Int)): (Boolean, Array[Array[Int]]) = {
 
   def updateState(player: Int, col: Int, state: Array[Array[Int]]): Option[(Array[Array[Int]], (Int, Int))] = {
     (5 to 0 by -1).find(row => state(row)(col) == 0).map { row =>
@@ -23,24 +23,23 @@ def Connect4_controller(game: String, move: String, state: (Array[Array[Int]], I
     }
   }
 
-  game match {
-    case "connect4" =>
-      val player = state._2 % 2 + 1
-      val col = move.toInt - 1
-      //val col =  move.toInt - 'a'.toInt
-      if (col < 0 || col > 6 || state._1(0)(col) != 0) {
-        (false, state._1)
-      } else {
-        updateState(player, col, state._1) match {
-          case Some((newState, (row, col))) => (true, newState)
-          case None => (false, state._1)
-        }
-      }
+  val player = state._2 % 2 + 1
+  val col = move.toInt - 1
+  //val col =  move.toInt - 'a'.toInt
+  if (col < 0 || col > 6 || state._1(0)(col) != 0) {
+    (false, state._1)
+  } else {
+    updateState(player, col, state._1) match {
+      case Some((newState, (row, col))) => (true, newState)
+      case None => (false, state._1)
+    }
   }
+
 }
 
 
-def drawBoardGUI_Connect4(state: Array[Array[Int]], frame: JFrame): Unit = {
+def drawBoardGUI_Connect4(state: Array[Array[Int]]): Unit = {
+  val frame = new JFrame
   println("from the drawer of connect 4")
   val panel = new JPanel() {
     override def paintComponent(g: Graphics): Unit = {

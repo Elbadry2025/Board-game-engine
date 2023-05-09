@@ -24,40 +24,41 @@ createMainMenu()
 
 
 def createMainMenu(): Unit = {
-  val gameOptions: List[String] = List(
-    "Chess",
-    "Checkers",
-    "8 Queens",
-    "Sudoku",
-    "Tic-Tac-Toe",
-    "Connect 4"
-  )
+//  val gameOptions: List[String] = List(
+//    "Chess",
+//    "Checkers",
+//    "8 Queens",
+//    "Sudoku",
+//    "Tic-Tac-Toe",
+//    "Connect 4"
+//  )
+//
+//  val gameList: ListView[String] = new ListView(gameOptions)
+//  val startButton: Button = new Button("Start Game")
+//
+//  val mainFrame: MainFrame = new MainFrame {
+//    title = "Game Selection Menu"
+//    preferredSize = new Dimension(300, 200)
+//    contents = new BoxPanel(Orientation.Vertical) {
+//      contents += new Label("Select a game:")
+//      contents += gameList
+//      contents += startButton
+//      border = Swing.EmptyBorder(20, 20, 20, 20)
+//    }
+//  }
+//
+//  mainFrame.listenTo(startButton)
+//  mainFrame.reactions += {
+//    case ButtonClicked(`startButton`) =>
+//      mainFrame.dispose() // Close the main menu window
+//      val selectedGame: Option[String] = gameList.selection.items.headOption
+//      selectedGame.foreach(startGame)
+//  }
+//
+//  SwingUtilities.invokeLater(() => {
+//    mainFrame.visible = true
+//  })
 
-  val gameList: ListView[String] = new ListView(gameOptions)
-  val startButton: Button = new Button("Start Game")
-
-  val mainFrame: MainFrame = new MainFrame {
-    title = "Game Selection Menu"
-    preferredSize = new Dimension(300, 200)
-    contents = new BoxPanel(Orientation.Vertical) {
-      contents += new Label("Select a game:")
-      contents += gameList
-      contents += startButton
-      border = Swing.EmptyBorder(20, 20, 20, 20)
-    }
-  }
-
-  mainFrame.listenTo(startButton)
-  mainFrame.reactions += {
-    case ButtonClicked(`startButton`) =>
-      mainFrame.dispose() // Close the main menu window
-      val selectedGame: Option[String] = gameList.selection.items.headOption
-      selectedGame.foreach(startGame)
-  }
-
-  SwingUtilities.invokeLater(() => {
-    mainFrame.visible = true
-  })
 }
 
 
@@ -77,7 +78,7 @@ def startGame(game: String): Unit = {
     case "Checkers" => abstractEngine[String](2, checkersController, drawGUICheckers, initializeCheckersBoard)
     case "tic_tac_toe" => abstractEngine[Char](2, TicTacToeController, TicTacToeDrawer, initializeTicTacToeBoard)
     case "8 Queens" => abstractEngine[Char](1, EQueensController, drawGUIEQueen, initializeEQueenBoard)
-    //      case "sudoku" => abstractEngine[Int](1, Sudokucontroller, drawBoardGUI_Sudoku, fillRandom)
+          case "Sudoku" => abstractEngine[Int](1, Sudokucontroller, drawBoardGUI_Sudoku, fillRandom)
     //      case "connect 4" => abstractEngine[Int](2,Connect4_controller,drawBoardGUI_Connect4,)
     case "Chess" => abstractEngine[(Colors,Pieces)](2, chessController, drawChessBoardWithPieces, initChessBoard)
 }
