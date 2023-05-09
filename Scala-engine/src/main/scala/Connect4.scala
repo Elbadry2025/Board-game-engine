@@ -3,6 +3,11 @@ package Connect4
 import java.awt.{Color, Graphics}
 import javax.swing.{JFrame, JPanel}
 
+
+def fill(): Array[Array[Int]] = {
+  val board = Array.fill(6,7)(0);
+  board
+}
 def Connect4_drawer(state: Array[Array[Int]]): Unit = {
   println("1 2 3 4 5 6 7")
   state.map(row => {
