@@ -5,7 +5,7 @@ import java.awt.{Color, Graphics2D, Image, RenderingHints, Toolkit}
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
-import scala.swing.{Dimension, GridPanel, MainFrame}
+import scala.swing.{BorderPanel, Dimension, GridPanel, Label, MainFrame}
 def EQueensController(move: String, state: (Array[Array[Char]], Int)): (Boolean, Array[Array[Char]]) =
 {
   val indexedMove = changeLettersToIndex(move)
@@ -113,11 +113,27 @@ def drawGUIEQueen(board: Array[Array[Char]]): Unit = {
 
   val frame = new MainFrame {
     title = "Chess Board"
-    contents = boardGUI
+    contents = new BorderPanel {
+      add(boardGUI, BorderPanel.Position.Center)
+      val rowLabels = new GridPanel(8, 1) {
+        preferredSize = new Dimension(64 / 2, 512)
+        for (i <- 0 until 8) {
+          contents += new Label(numbers(7 - i))
+        }
+      }
+      val colLabels = new GridPanel(1, 8) {
+        preferredSize = new Dimension(512, 64 / 2)
+        for (j <- 0 until 8) {
+          contents += new Label(letters(j))
+        }
+      }
+      add(rowLabels, BorderPanel.Position.West)
+      add(colLabels, BorderPanel.Position.South)
+    }
     pack()
     centerOnScreen()
     open()
-    repaint()
+    
   }
 }
 def getPath(i: Int, j: Int, board: Array[Array[Char]]):Image = board(i)(j) match{

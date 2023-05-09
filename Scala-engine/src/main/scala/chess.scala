@@ -129,7 +129,8 @@ def addAttackInConsecutiveCellsPawn(inc1:Int, inc2:Int, range:Int, point:(Int,In
 }
 
 def addMovesPawnDiagonal(point:(Int,Int),board:Array[Array[(Colors,Pieces)]]):List[(Int,Int)] ={
-  List((1,1),(1,-1)).flatMap(pair => addAttackInConsecutiveCellsPawn(pair(0), pair(1), 1,point,board))
+  if(board(point._1)(point._2)(0) == Colors.White) List((-1,1),(-1,-1)).flatMap(pair => addAttackInConsecutiveCellsPawn(pair(0), pair(1), 1,point,board))
+    else List((1,1),(1,-1)).flatMap(pair => addAttackInConsecutiveCellsPawn(pair(0), pair(1), 1,point,board))
 }
 def addPawnMoves(point:(Int,Int),board:Array[Array[(Colors,Pieces)]]):List[(Int,Int)] ={
   (point(0),board(point(0))(point(1))(0)) match
@@ -207,7 +208,7 @@ def drawChessBoardWithPieces(board: Array[Array[(Colors,Pieces)]]): Unit = {
   val darkSquare = new Color(209, 139, 71)
   val lightSquare = new Color(255, 206, 158)
 
-  val letters = Array("a", "b", "c", "d", "e", "f", "g", "h")
+  val letters = Array("A", "B", "C", "D", "E", "F", "G", "H")
   val numbers = Array("1", "2", "3", "4", "5", "6", "7", "8")
   val pieces = Map(
     'R' -> "rook",
@@ -239,22 +240,27 @@ def drawChessBoardWithPieces(board: Array[Array[(Colors,Pieces)]]): Unit = {
 
   val frame = new MainFrame {
     title = "Chess Board"
-    contents = boardGUI
+    contents = new BorderPanel {
+      add(boardGUI, BorderPanel.Position.Center)
+      val rowLabels = new GridPanel(8, 1) {
+        preferredSize = new Dimension(64 / 2, 512)
+        for (i <- 0 until 8) {
+          contents += new Label(numbers(7 - i))
+        }
+      }
+      val colLabels = new GridPanel(1, 8) {
+        preferredSize = new Dimension(512, 64 / 2)
+        for (j <- 0 until 8) {
+          contents += new Label(letters(j))
+        }
+      }
+      add(rowLabels, BorderPanel.Position.West)
+      add(colLabels, BorderPanel.Position.South)
+    }
     pack()
     centerOnScreen()
     open()
-    repaint()
   }
-
-//val gameWindow = new MainFrame {
-//  title = "aaaaa"
-//  preferredSize = new Dimension(300, 200)
-//  contents = new BoxPanel(Orientation.Vertical) {
-//    contents += new Label(s"You selected $title")
-//    border = Swing.EmptyBorder(20, 20, 20, 20)
-//  }
-//}
-//  gameWindow.visible = true
 }
 def getPath(i: Int, j: Int, board: Array[Array[(Colors,Pieces)]]):Image = board(i)(j) match{
   case (Colors.White, Pieces.Rook) => getPieceImage("rook",true)
