@@ -94,7 +94,7 @@ def drawGUIEQueen(board: Array[Array[Char]]): Unit = {
   val numbers = Array("1", "2", "3", "4", "5", "6", "7", "8")
 
   val boardGUI = new GridPanel(8, 8) {
-    preferredSize = new Dimension(640, 640)
+    preferredSize = new Dimension(512, 512)
     override def paintComponent(g: Graphics2D) = {
       super.paintComponent(g)
       val pieceSize = 64

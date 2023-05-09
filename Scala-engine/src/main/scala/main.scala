@@ -4,12 +4,13 @@ import Chess.Pieces.{Pieces, Value}
 import Sudoku.GameEngine.*
 
 import javax.swing.{ImageIcon, JFrame, SwingUtilities}
+import scala.io.StdIn
 //import scala.swing.{Component, MainFrame, SimpleSwingApplication}
 import scala.swing._
 import scala.util.control.Breaks.break
 import scala.swing.event.ButtonClicked
 //import Connect4._
-//import Sudoku._
+import Sudoku._
 import Chess._
 import Checkers._
 import Tic_Tac_Toe._
@@ -23,6 +24,7 @@ createMainMenu()
 
 
 def createMainMenu(): Unit = {
+//  startGame(StdIn.readLine())
   val gameOptions: List[String] = List(
     "Chess",
     "Checkers",
@@ -61,8 +63,8 @@ def createMainMenu(): Unit = {
       case "Tic_Tac_Toe" => abstractEngine[Char](2, TicTacToeController, TicTacToeDrawer, initializeTicTacToeBoard)
       case "8 Queens" => abstractEngine[Char](1, EQueensController, drawGUIEQueen, initializeEQueenBoard)
 //      case "sudoku" => abstractEngine[Int](1, Sudokucontroller, drawBoardGUI_Sudoku, fillRandom)
-//      case "connect 4" => abstractEngine(2,)
-//      case "chess" => abstractEngine[(Colors,Pieces)](2, chessDrawer,chessController)
+//      case "connect 4" => abstractEngine[Int](2,Connect4_controller,drawBoardGUI_Connect4,)
+      case "Chess" => abstractEngine[(Colors,Pieces)](2, chessController, drawChessBoardWithPieces, initChessBoard)
 
   }
 
@@ -91,10 +93,6 @@ def abstractEngine[T](numOfPlayers: Int,
 }
 
 ///////////////////////////////////////
-
-
-
-
 
 
 

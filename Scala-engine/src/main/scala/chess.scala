@@ -18,44 +18,46 @@ object Colors extends Enumeration {
   val Empty = Value("Empty")
 }
 
-def initBoard(dimx: Int, dimy: Int):Array[Array[(Colors,Pieces)]]={
-  var state = Array.ofDim[(Colors,Pieces)](dimx, dimy)
-  (0 until dimx).foreach { row =>
-    (0 until dimy).foreach { col =>
+def initChessBoard():Array[Array[(Colors,Pieces)]]={
+  var state = Array.ofDim[(Colors,Pieces)](8, 8)
+  (0 until 8).foreach { row =>
+    (0 until 8).foreach { col =>
       state(row)(col) = (Colors.Empty,Pieces.Empty)
     }
   }
-  state(0)(0) = (Colors.White,Pieces.Rook)
-  state(0)(1) = (Colors.White,Pieces.Knight)
-  state(0)(2) = (Colors.White,Pieces.Bishop)
-  state(0)(3) = (Colors.White,Pieces.King)
-  state(0)(4) = (Colors.White,Pieces.Queen)
-  state(0)(5) = (Colors.White,Pieces.Bishop)
-  state(0)(6) = (Colors.White,Pieces.Knight)
-  state(0)(7) = (Colors.White,Pieces.Rook)
-  (0 to 7).foreach(i=>state(1)(i)=(Colors.White,Pieces.pawn))
+  state(7)(0) = (Colors.White,Pieces.Rook)
+  state(7)(1) = (Colors.White,Pieces.Knight)
+  state(7)(2) = (Colors.White,Pieces.Bishop)
+  state(7)(3) = (Colors.White,Pieces.King)
+  state(7)(4) = (Colors.White,Pieces.Queen)
+  state(7)(5) = (Colors.White,Pieces.Bishop)
+  state(7)(6) = (Colors.White,Pieces.Knight)
+  state(7)(7) = (Colors.White,Pieces.Rook)
+  (0 to 7).foreach(i=>state(6)(i)=(Colors.White,Pieces.pawn))
 
-  state(7)(0) = (Colors.Black,Pieces.Rook)
-  state(7)(1) = (Colors.Black,Pieces.Knight)
-  state(7)(2) = (Colors.Black,Pieces.Bishop)
-  state(7)(3) = (Colors.Black,Pieces.King)
-  state(7)(4) = (Colors.Black,Pieces.Queen)
-  state(7)(5) = (Colors.Black,Pieces.Bishop)
-  state(7)(6) = (Colors.Black,Pieces.Knight)
-  state(7)(7) = (Colors.Black,Pieces.Rook)
-  (0 to 7).foreach(i=>state(6)(i)=(Colors.Black,Pieces.pawn))
+  state(0)(0) = (Colors.Black,Pieces.Rook)
+  state(0)(1) = (Colors.Black,Pieces.Knight)
+  state(0)(2) = (Colors.Black,Pieces.Bishop)
+  state(0)(3) = (Colors.Black,Pieces.King)
+  state(0)(4) = (Colors.Black,Pieces.Queen)
+  state(0)(5) = (Colors.Black,Pieces.Bishop)
+  state(0)(6) = (Colors.Black,Pieces.Knight)
+  state(0)(7) = (Colors.Black,Pieces.Rook)
+  (0 to 7).foreach(i=>state(1)(i)=(Colors.Black,Pieces.pawn))
 
   state
 }
 
-def chessController(state:(String,(Array[Array[(Colors,Pieces)]], Int))) : (Boolean, Array[Array[(Colors,Pieces)]]) = {
-  val move = changeLettersToIndex(state(0))
-  val moveFrom = (move(0)(1),move(0)(0))
-  val moveTo = (move(1)(1),move(1)(0))
-  val validatingMove = validate(state(1)(0), moveTo, moveFrom, state(1)(1))
+def chessController(move:String,state:(Array[Array[(Colors,Pieces)]], Int)) : (Boolean, Array[Array[(Colors,Pieces)]]) = {
+  val indexedMove = changeLettersToIndex(move)
+  val moveFrom = (8 - indexedMove(0)(1),indexedMove(0)(0))
+  val moveTo = (8 - indexedMove(1)(1),indexedMove(1)(0))
+  println(s"move from $moveFrom")
+  println(s"move to $moveTo")
+  val validatingMove = validate(state(0), moveTo, moveFrom, state(1))
 
-  if(validatingMove) applyMove(state(1)(0), moveTo, moveFrom)
-  (validatingMove,state(1)(0))
+  if(validatingMove) applyMove(state(0), moveTo, moveFrom)
+  (validatingMove,state(0))
 }
 
 def getValidMove(board:Array[Array[(Colors,Pieces)]], moveFrom:(Int,Int)):List[(Int,Int)]={
@@ -108,7 +110,7 @@ def addKnightMoves(point:(Int,Int),board:Array[Array[(Colors,Pieces)]]):List[(In
 
 def addPawnMoves (range:Int, point:(Int,Int), board:Array[Array[(Colors,Pieces)]]): List[(Int,Int)] = {
   (0 to 2).flatMap(i => if(i==0) addMovesInConsecutiveCellsChess((board(point._1)(point._2)._1
-  match {case Colors.White => 1 case Colors.Black => -1}),
+  match {case Colors.Black => 1 case Colors.White => -1}),
     0, range,point, board, false) else addMovesPawnDiagonal(point, board)).toList
 
 }
@@ -129,8 +131,8 @@ def addMovesPawnDiagonal(point:(Int,Int),board:Array[Array[(Colors,Pieces)]]):Li
 }
 def addPawnMoves(point:(Int,Int),board:Array[Array[(Colors,Pieces)]]):List[(Int,Int)] ={
   (point(0),board(point(0))(point(1))(0)) match
-    case (1,Colors.White) => addPawnMoves(2, point, board)
-    case (6,Colors.Black) => addPawnMoves(2, point, board)
+    case (6,Colors.White) => addPawnMoves(2, point, board)
+    case (1,Colors.Black) => addPawnMoves(2, point, board)
     case (_,Colors.White) => addPawnMoves(1, point, board)
     case (_,Colors.Black) => addPawnMoves(1, point, board)
 }
@@ -215,7 +217,7 @@ def drawChessBoardWithPieces(board: Array[Array[(Colors,Pieces)]]): Unit = {
   )
 
   val boardGUI = new GridPanel(8, 8) {
-    preferredSize = new Dimension(640, 640)
+    preferredSize = new Dimension(512, 512)
     override def paintComponent(g: Graphics2D) = {
       super.paintComponent(g)
       val pieceSize = 64
