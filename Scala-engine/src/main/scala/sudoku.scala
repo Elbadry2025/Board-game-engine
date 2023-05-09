@@ -133,12 +133,12 @@ object GameEngine {
   ///////////
 
 
+  import javax.swing._
+  import java.awt._
 
-
-  def drawBoardGUI_Sudoku(board: Array[Array[(Int,Boolean)]]): Unit = {
-    //Sudokudrawer(board)
+  def drawBoardGUI_Sudoku(board: Array[Array[(Int, Boolean)]]): Unit = {
     val frame = new JFrame
-    val panel = new JPanel() {
+    val panel = new JPanel(new BorderLayout()) {
       override def paintComponent(g: Graphics): Unit = {
         super.paintComponent(g)
         val g2d = g.asInstanceOf[Graphics2D]
@@ -174,10 +174,22 @@ object GameEngine {
       }
     }
 
-    frame.add(panel)
-    frame.setSize(500, 500)
+    // Add row and column labels
+    val rowLabels = new JPanel(new GridLayout(9, 1)) {
+      (9 to 1 by -1).foreach(i => add(new JLabel(i.toString, SwingConstants.CENTER)))
+    }
+    val colLabels = new JPanel(new GridLayout(1, 9)) {
+      ('a' to 'i').foreach(i => add(new JLabel(i.toString, SwingConstants.CENTER)))
+    }
+
+    // Add labels and panel to frame
+    frame.add(rowLabels, BorderLayout.WEST)
+    frame.add(colLabels, BorderLayout.NORTH)
+    frame.add(panel, BorderLayout.CENTER)
+    frame.setSize(600, 600)
     frame.setVisible(true)
   }
+
 
 
 
