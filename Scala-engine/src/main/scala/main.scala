@@ -68,7 +68,7 @@ def startGame(game: String): Unit = {
     case "Checkers" => abstractEngine[String](2, checkersController, drawGUICheckers, initializeCheckersBoard)
     case "Tic-Tac-Toe" => abstractEngine[Char](2, TicTacToeController, TicTacToeDrawer, initializeTicTacToeBoard)
     case "8 Queens" => abstractEngine[Char](1, EQueensController, drawGUIEQueen, initializeEQueenBoard)
-    case "Sudoku" => abstractEngine[Int](1, Sudokucontroller, drawBoardGUI_Sudoku, fillRandom)
+    case "Sudoku" => abstractEngine[(Int,Boolean)](1, Sudokucontroller, drawBoardGUI_Sudoku, fillRandom)
     case "Connect 4" => abstractEngine[Int](2,Connect4_controller,drawBoardGUI_Connect4,fill)
     case "Chess" => abstractEngine[(Colors,Pieces)](2, chessController, drawChessBoardWithPieces, initChessBoard)
 }
