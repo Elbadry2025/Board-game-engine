@@ -237,24 +237,24 @@ def drawChessBoardWithPieces(board: Array[Array[(Colors,Pieces)]]): Unit = {
     }
   }
 
+  val rowLabels = new GridPanel(8, 1) {
+    preferredSize = new Dimension(17, 512)
+    for (i <- 0 until 8) {
+      contents += new Label(numbers(7 - i))
+    }
+  }
+  val colLabels = new GridPanel(1, 8) {
+    preferredSize = new Dimension(512, 17)
+    for (j <- 0 until 8) {
+      contents += new Label(letters(j))
+    }
+  }
 
   val frame = new MainFrame {
     title = "Chess Board"
     contents = new BorderPanel {
+      add(rowLabels, BorderPanel.Position.East)
       add(boardGUI, BorderPanel.Position.Center)
-      val rowLabels = new GridPanel(8, 1) {
-        preferredSize = new Dimension(64 / 2, 512)
-        for (i <- 0 until 8) {
-          contents += new Label(numbers(7 - i))
-        }
-      }
-      val colLabels = new GridPanel(1, 8) {
-        preferredSize = new Dimension(512, 64 / 2)
-        for (j <- 0 until 8) {
-          contents += new Label(letters(j))
-        }
-      }
-      add(rowLabels, BorderPanel.Position.West)
       add(colLabels, BorderPanel.Position.South)
     }
     pack()

@@ -90,7 +90,7 @@ def drawGUIEQueen(board: Array[Array[Char]]): Unit = {
   val darkSquare = new Color(209, 139, 71)
   val lightSquare = new Color(255, 206, 158)
 
-  val letters = Array("a", "b", "c", "d", "e", "f", "g", "h")
+  val letters = Array("A", "B", "C", "D", "E", "F", "G", "H")
   val numbers = Array("1", "2", "3", "4", "5", "6", "7", "8")
 
   val boardGUI = new GridPanel(8, 8) {
@@ -110,30 +110,29 @@ def drawGUIEQueen(board: Array[Array[Char]]): Unit = {
       }
     }
   }
+  val rowLabels = new GridPanel(8, 1) {
+    preferredSize = new Dimension(17, 512)
+    for (i <- 0 until 8) {
+      contents += new Label(numbers(7 - i))
+    }
+  }
+  val colLabels = new GridPanel(1, 8) {
+    preferredSize = new Dimension(512, 17)
+    for (j <- 0 until 8) {
+      contents += new Label(letters(j))
+    }
+  }
 
   val frame = new MainFrame {
     title = "Chess Board"
     contents = new BorderPanel {
       add(boardGUI, BorderPanel.Position.Center)
-      val rowLabels = new GridPanel(8, 1) {
-        preferredSize = new Dimension(64 / 2, 512)
-        for (i <- 0 until 8) {
-          contents += new Label(numbers(7 - i))
-        }
-      }
-      val colLabels = new GridPanel(1, 8) {
-        preferredSize = new Dimension(512, 64 / 2)
-        for (j <- 0 until 8) {
-          contents += new Label(letters(j))
-        }
-      }
       add(rowLabels, BorderPanel.Position.West)
       add(colLabels, BorderPanel.Position.South)
     }
     pack()
     centerOnScreen()
     open()
-    
   }
 }
 def getPath(i: Int, j: Int, board: Array[Array[Char]]):Image = board(i)(j) match{
