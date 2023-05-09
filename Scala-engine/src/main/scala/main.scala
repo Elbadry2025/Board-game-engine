@@ -24,18 +24,16 @@ createMainMenu()
 
 
 def createMainMenu(): Unit = {
-//  startGame(StdIn.readLine())
   val gameOptions: List[String] = List(
     "Chess",
     "Checkers",
     "8 Queens",
-    "sudoku",
-    "tic_tac_toe",
-    "connect 4"
+    "Sudoku",
+    "Tic-Tac-Toe",
+    "Connect 4"
   )
 
   val gameList: ListView[String] = new ListView(gameOptions)
-
   val startButton: Button = new Button("Start Game")
 
   val mainFrame: MainFrame = new MainFrame {
@@ -49,23 +47,12 @@ def createMainMenu(): Unit = {
     }
   }
 
-  mainFrame.listenTo(startButton)  // Register event listener
+  mainFrame.listenTo(startButton)
   mainFrame.reactions += {
     case ButtonClicked(`startButton`) =>
+      mainFrame.dispose() // Close the main menu window
       val selectedGame: Option[String] = gameList.selection.items.headOption
       selectedGame.foreach(startGame)
-  }
-
-  def startGame(game: String): Unit = {
-    println(game)
-    game match
-      case "Checkers" => abstractEngine[String](2, checkersController, drawGUICheckers, initializeCheckersBoard)
-      case "Tic_Tac_Toe" => abstractEngine[Char](2, TicTacToeController, TicTacToeDrawer, initializeTicTacToeBoard)
-      case "8 Queens" => abstractEngine[Char](1, EQueensController, drawGUIEQueen, initializeEQueenBoard)
-//      case "sudoku" => abstractEngine[Int](1, Sudokucontroller, drawBoardGUI_Sudoku, fillRandom)
-//      case "connect 4" => abstractEngine[Int](2,Connect4_controller,drawBoardGUI_Connect4,)
-      case "Chess" => abstractEngine[(Colors,Pieces)](2, chessController, drawChessBoardWithPieces, initChessBoard)
-
   }
 
   SwingUtilities.invokeLater(() => {
@@ -73,6 +60,31 @@ def createMainMenu(): Unit = {
   })
 }
 
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+def startGame(game: String): Unit = {
+  println(game)
+  game match
+    case "Checkers" => abstractEngine[String](2, checkersController, drawGUICheckers, initializeCheckersBoard)
+    case "tic_tac_toe" => abstractEngine[Char](2, TicTacToeController, TicTacToeDrawer, initializeTicTacToeBoard)
+    case "8 Queens" => abstractEngine[Char](1, EQueensController, drawGUIEQueen, initializeEQueenBoard)
+    //      case "sudoku" => abstractEngine[Int](1, Sudokucontroller, drawBoardGUI_Sudoku, fillRandom)
+    //      case "connect 4" => abstractEngine[Int](2,Connect4_controller,drawBoardGUI_Connect4,)
+    case "Chess" => abstractEngine[(Colors,Pieces)](2, chessController, drawChessBoardWithPieces, initChessBoard)
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////
 def abstractEngine[T](numOfPlayers: Int,
                    controller: (String, (Array[Array[T]], Int)) => (Boolean, Array[Array[T]]),
                    drawer: Array[Array[T]] => Unit,

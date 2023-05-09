@@ -1,6 +1,8 @@
 package Chess
 import Colors.{Colors, White}
 import Pieces.{Empty, Pieces}
+
+import javax.swing.SwingUtilities
 object Pieces extends Enumeration {
   type Pieces = Value
   val pawn = Value("pawn")
