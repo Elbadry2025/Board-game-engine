@@ -159,12 +159,8 @@ def drawGUICheckers(board: Array[Array[String]]): Unit = {
           val squareColor = if ((i + j) % 2 == 0) lightSquare else darkSquare
           g.setColor(squareColor)
           g.fillRect(j * pieceSize, i * pieceSize, pieceSize, pieceSize)
-          for(i<-0 to 7){
-            for(j<-0 to 7){
               if(board(i)(j)!="0"){
                 g.drawImage(getPath(i, j, board), j * pieceSize, i * pieceSize, pieceSize, pieceSize, null)
-              }
-            }
           }
         }
       }

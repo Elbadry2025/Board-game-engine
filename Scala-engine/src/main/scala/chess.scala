@@ -228,13 +228,9 @@ def drawChessBoardWithPieces(board: Array[Array[(Colors,Pieces)]]): Unit = {
           val squareColor = if ((i + j) % 2 == 0) lightSquare else darkSquare
           g.setColor(squareColor)
           g.fillRect(j * pieceSize, i * pieceSize, pieceSize, pieceSize)
-          for(i<-0 to 7){
-            for(j<-0 to 7){
-              if(board(i)(j)(0)!=Colors.Empty){
+              if(board(i)(j)(0) != Colors.Empty){
                 g.drawImage(getPath(i, j, board), j * pieceSize, i * pieceSize, pieceSize, pieceSize, null)
               }
-            }
-          }
         }
       }
     }
@@ -249,6 +245,16 @@ def drawChessBoardWithPieces(board: Array[Array[(Colors,Pieces)]]): Unit = {
     open()
     repaint()
   }
+
+//val gameWindow = new MainFrame {
+//  title = "aaaaa"
+//  preferredSize = new Dimension(300, 200)
+//  contents = new BoxPanel(Orientation.Vertical) {
+//    contents += new Label(s"You selected $title")
+//    border = Swing.EmptyBorder(20, 20, 20, 20)
+//  }
+//}
+//  gameWindow.visible = true
 }
 def getPath(i: Int, j: Int, board: Array[Array[(Colors,Pieces)]]):Image = board(i)(j) match{
   case (Colors.White, Pieces.Rook) => getPieceImage("rook",true)

@@ -19,6 +19,9 @@ def Connect4_drawer(state: Array[Array[Int]]): Unit = {
   }).foreach(println)
   println()
 }
+def changeLettersToIndex =(move:String) => move.split(' ').map(arr => arr.map(c=>
+  if(c.isLetter)c.toInt - 'a'.toInt else c.toInt -'0'.toInt))
+
 
 def Connect4_controller(move: String, state: (Array[Array[Int]], Int)): (Boolean, Array[Array[Int]]) = {
 
@@ -29,7 +32,7 @@ def Connect4_controller(move: String, state: (Array[Array[Int]], Int)): (Boolean
   }
 
   val player = state._2 % 2 + 1
-  val col = move.toInt - 1
+  val col = changeLettersToIndex(move)(0)(0)
   //val col =  move.toInt - 'a'.toInt
   if (col < 0 || col > 6 || state._1(0)(col) != 0) {
     (false, state._1)

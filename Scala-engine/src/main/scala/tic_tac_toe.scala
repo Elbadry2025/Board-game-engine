@@ -80,13 +80,9 @@ def TicTacToeDrawer(board: Array[Array[Char]]): Unit = {
           val squareColor = if ((i + j) % 2 == 0) lightSquare else darkSquare
           g.setColor(squareColor)
           g.fillRect(j * pieceSize, i * pieceSize, pieceSize, pieceSize)
-          for(i<-0 to 2){
-            for(j<-0 to 2){
-              if(board(i)(j)!='e'){
-                g.drawImage(getPath(i, j, board), j * pieceSize, i * pieceSize, pieceSize, pieceSize, null)
-              }
+            if(board(i)(j)!='e'){
+              g.drawImage(getPath(i, j, board), j * pieceSize, i * pieceSize, pieceSize, pieceSize, null)
             }
-          }
         }
       }
     }

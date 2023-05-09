@@ -69,6 +69,7 @@ object GameEngine {
         var value = random.nextInt(9) + 1;
         while(! isValidMoveSudoku(board, row, col, value))
           value = random.nextInt(9) + 1
+        board(row)(col) = value
       }
       count += 1
     }
@@ -121,6 +122,7 @@ object GameEngine {
 
   ///////////
   def drawBoardGUI_Sudoku(board: Array[Array[Int]]): Unit = {
+    Sudokudrawer(board)
     val frame = new JFrame
     val panel = new JPanel() {
       override def paintComponent(g: Graphics): Unit = {
