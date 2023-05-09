@@ -5,7 +5,7 @@ import java.awt.{Color, Graphics2D, Image, RenderingHints, Toolkit}
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
-import scala.swing.{Dimension, GridPanel, MainFrame}
+import scala.swing.{BorderPanel, Dimension, GridPanel, Label, MainFrame}
 def EQueensController(move: String, state: (Array[Array[Char]], Int)): (Boolean, Array[Array[Char]]) =
 {
   val indexedMove = changeLettersToIndex(move)
@@ -90,7 +90,7 @@ def drawGUIEQueen(board: Array[Array[Char]]): Unit = {
   val darkSquare = new Color(209, 139, 71)
   val lightSquare = new Color(255, 206, 158)
 
-  val letters = Array("a", "b", "c", "d", "e", "f", "g", "h")
+  val letters = Array("A", "B", "C", "D", "E", "F", "G", "H")
   val numbers = Array("1", "2", "3", "4", "5", "6", "7", "8")
 
   val boardGUI = new GridPanel(8, 8) {
@@ -110,14 +110,29 @@ def drawGUIEQueen(board: Array[Array[Char]]): Unit = {
       }
     }
   }
+  val rowLabels = new GridPanel(8, 1) {
+    preferredSize = new Dimension(17, 512)
+    for (i <- 0 until 8) {
+      contents += new Label(numbers(7 - i))
+    }
+  }
+  val colLabels = new GridPanel(1, 8) {
+    preferredSize = new Dimension(512, 17)
+    for (j <- 0 until 8) {
+      contents += new Label(letters(j))
+    }
+  }
 
   val frame = new MainFrame {
     title = "Chess Board"
-    contents = boardGUI
+    contents = new BorderPanel {
+      add(boardGUI, BorderPanel.Position.Center)
+      add(rowLabels, BorderPanel.Position.West)
+      add(colLabels, BorderPanel.Position.South)
+    }
     pack()
     centerOnScreen()
     open()
-    repaint()
   }
 }
 def getPath(i: Int, j: Int, board: Array[Array[Char]]):Image = board(i)(j) match{

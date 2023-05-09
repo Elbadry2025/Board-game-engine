@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
 import scala.swing.Action.NoAction.title
-import scala.swing.{Color, Dimension, Graphics2D, GridPanel, Image, MainFrame}
+import scala.swing.{BorderPanel, Color, Dimension, Graphics2D, GridPanel, Image, Label, MainFrame}
 
 def TicTacToeController(move: String, state: (Array[Array[Char]], Int)): (Boolean, Array[Array[Char]]) =
 {
@@ -66,7 +66,7 @@ def TicTacToeDrawer(board: Array[Array[Char]]): Unit = {
   val darkSquare = new Color(209, 139, 71)
   val lightSquare = new Color(255, 206, 158)
 
-  val letters = Array("a", "b", "c", "d", "e", "f", "g", "h")
+  val letters = Array("A", "B", "C", "D", "E", "F", "G", "H")
   val numbers = Array("1", "2", "3", "4", "5", "6", "7", "8")
 
 
@@ -89,9 +89,26 @@ def TicTacToeDrawer(board: Array[Array[Char]]): Unit = {
   }
 
 
+  val rowLabels = new GridPanel(8, 1) {
+    preferredSize = new Dimension(17, 512)
+    for (i <- 0 until 8) {
+      contents += new Label(numbers(7 - i))
+    }
+  }
+  val colLabels = new GridPanel(1, 8) {
+    preferredSize = new Dimension(512, 17)
+    for (j <- 0 until 8) {
+      contents += new Label(letters(j))
+    }
+  }
+
   val frame = new MainFrame {
     title = "Tic_Tac_Toe Board"
-    contents = boardGUI
+    contents = new BorderPanel {
+      add(boardGUI, BorderPanel.Position.Center)
+      add(rowLabels, BorderPanel.Position.West)
+      add(colLabels, BorderPanel.Position.South)
+    }
     pack()
     centerOnScreen()
     open()
