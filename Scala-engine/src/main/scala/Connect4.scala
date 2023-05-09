@@ -41,6 +41,7 @@ def Connect4_controller(game: String, move: String, state: (Array[Array[Int]], I
 
 
 def drawBoardGUI_Connect4(state: Array[Array[Int]], frame: JFrame): Unit = {
+  println("from the drawer of connect 4")
   val panel = new JPanel() {
     override def paintComponent(g: Graphics): Unit = {
       super.paintComponent(g)
